@@ -5,7 +5,7 @@ if [ 2 -eq $num ]; then
 	randnum=$((1 + RANDOM % $nestCount))
 	#nestIntArray[randnum] > /dev/null
 	echo "A bird was scared away"
-	nestIntArray[$randnum]=$(expr ${nestIntArray[$randnum]} - 1)
+	nestIntArray[$randnum]=$((nestIntArray[$randnum] - 1))
 else
 	echo "No birds were scared away!"
 fi
