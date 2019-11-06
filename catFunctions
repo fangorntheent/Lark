@@ -2,8 +2,8 @@
 #catFunction
 MaximusSteal () {
 	chance=$((1 + RANDOM % 20))
-	if [ counter <= 3 ]; then
-		(( birdCount = $bircCount - 1 ))
+	if [ chance <= 3 ]; then
+		(( birdCount = $birdCount - 1 ))
 	fi
 }
 
