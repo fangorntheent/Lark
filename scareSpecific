@@ -1,0 +1,39 @@
+# scareSpecifc.sh
+# Scares away all birds "downstream" from where the first scare took place (Sends all nests to /dev/null...
+# ...in the respective stream)
+tempVal=1001
+TreeIntDef="${tempVal:0:1}"
+BrnchAIntDef="${tempVal:1:1}"
+BrnchBIntDef="${tempVal:2:1}"
+BirdIntDef="${tempVal:3:1}"
+
+for ((i = 0; i < $nestCount; i++)); do
+  tempValDef=${nestIntArray[$i]}
+  TreeInt="${nestIntArray[$i]:0:1}"
+  BrnchAInt="${nestIntArray[$i]:1:1}"
+  BrnchBInt="${nestIntArray[$i]:2:1}"
+  BirdInt="${nestIntArray[$i]:3:1}"
+
+  if [ $tempVal -ne $tempValDef ]; then
+    if [ $TreeIntDef -eq $TreeInt ]; then
+      if [ $BrnchAIntDef -eq $BrnchAInt ]; then
+        if [ $BirdIntDef -ne 0 -a $BirdInt -ne 0 ]; then
+          echo "Oh no! A bird flew away!"
+          nestIntArray[$i]=$((nestIntArray[$i] - 1))
+        fi
+      elif [ $BrnchBIntDef -eq $BrnchBInt -a $BrnchBIntDef -ne 0 -a $BrnchAIntDef -eq 0 ]; then
+        if [ $BirdIntDef -ne 0 -a $BirdInt -ne 0 ]; then
+          echo "Oh no! A bird flew away!"
+          nestIntArray[$i]=$((nestIntArray[$i] - 1))
+        fi
+      elif [ $BrnchAIntDef -eq $BrnchAInt -a $BrnchBIntDef -eq 0 -a $BirdInt -ne 0 ]; then
+          echo "Oh no! A bird flew away!"
+          nestIntArray[$i]=$((nestIntArray[$i] - 1))
+      elif [ $BrnchAIntDef -eq 0 -a $BirdInt -ne 0 ]; then
+        echo "Oh no! A bird flew away!"
+        nestIntArray[$i]=$((nestIntArray[$i] - 1))        
+      fi
+    fi
+  fi
+done
+echo ${nestIntArray[*]}
