@@ -1,7 +1,7 @@
 # scareSpecifc.sh
 # Scares away all birds "downstream" from where the first scare took place (Sends all nests to /dev/null...
 # ...in the respective stream)
-tempVal=
+tempVal= # This value should be a four-digit integer that corresponds to the scareRandom output
 TreeIntDef="${tempVal:0:1}"
 BrnchAIntDef="${tempVal:1:1}"
 BrnchBIntDef="${tempVal:2:1}"
