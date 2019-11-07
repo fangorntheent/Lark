@@ -13,10 +13,27 @@ clear
 function attack() {
 	clear
 	echo -e "${BLINK}stalking...${NORMAL}"
-	sleep 3
+	sleep 2
 	clear
 	echo -e "${BLINK}pouncing...${NORMAL}"
-	sleep 1
+	sleep 2
+	clear
+}
+
+function scareRandom() {
+	if [ "$nestCount" == 0 ]; then
+		break
+	fi
+	num=$((1 + RANDOM % 3)) # Picks a random number between 1 and 3 to see if a nest is scared off
+	if [ 2 -eq $num ]; then
+		randnum=$((1 + RANDOM % $nestCount))
+		echo "${nestArray[$randnum]}"
+		echo "It looks like you scared the bird away" > ${nestArray[$randnum]}
+		echo "A bird was scared away"
+		nestIntArray[$randnum]=$((nestIntArray[$randnum] - 1))
+	else
+		echo "No birds were scared away!"
+	fi
 }
 
 function cont() {
@@ -26,6 +43,7 @@ function cont() {
 
 function makeGarden() {
 	prefix="$PWD/$1"
+	save=$prefix/$1
 	if [ -d "$prefix" ]; then
 		read -p "Do you want to overwrite this existing save? (y/n) " overwrite
 		case "$overwrite" in
@@ -50,6 +68,10 @@ function makeGarden() {
 		mkdir $prefix
 	fi
 
+	touch $save
+	chmod +w $save
+	echo "birdCount $birdCount" > $save
+
 	mkdir $prefix/garden
 
 	trees=$((1 + RANDOM % 5))
@@ -72,35 +94,34 @@ function makeGarden() {
 					touch $prefix/garden/tree$t/branch$b1/branch$b2/nest
 					echo "BIRD!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
 					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
-					nestIntCount[$nestCount]=$(( t * 1000 + b1 * 100 + b2 * 10 + 1 ))
+					nestIntArray[$nestCount]=$(( t * 1000 + b1 * 100 + b2 * 10 + 1 ))
 				fi
 			done
 		done
 	done
-	echo "${nestIntCount[*]}"
 }
 brk=false
 
 function birdbath() {
 	clear
-	echo "This aquatic garden attraction offers water to drink and the potential to catch a dumb bird."
-	select option in drink wait leave Quit; do
+	echo "This aquatic garden attraction offers water to drink and the potential to ${GREEN}cat${NC}ch a dumb bird."
+	select option in drink "wait for a bird" leave Quit; do
 		case "$option" in
 			"drink")
 				echo "You take a sip of the stagnant water and think you just got a new parasite."
 				break
 			;;
-			"wait")
+			"wait for a bird")
 				read -p ": " command location
 				attack
 				case "$command" in
 					"cat")
-						if [ "$location" == "birdbath" ]; then
+						if [ "$location" == "birdbath" ] || [ "$location == bird" ]; then
 							if [ 1 == $((1 + RANDOM % 10)) ]; then									
 								(( birdCount = $birdCount + 1 ))
 								echo "You got a bird!"
 							else
-								echo "You did not get a bird."
+								echo "You missed and the bird flew away."
 							fi
 						else
 							echo "You knocked over the bird bath and scared away the bird!"
@@ -256,5 +277,5 @@ for ((i = 1 ; i < 15 ; i++)); do
 	done
 done
 
-
+echo "You finished the game with $birdCount bird(s)."
 
