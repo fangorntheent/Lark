@@ -4,11 +4,26 @@
 BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
 #NC=$(tput setaf 7)
 NC=$(tput sgr0)
 BLINK=$(tput blink)
 
 clear
+
+function save() {
+	echo "nestCount $nestCount" > $save
+	echo "birdCount $birdCount" >> $save
+	echo "dayCount $dayCount" >> $save
+	echo "chance $chance" >> $save
+}
+
+function getSave() {
+	nestCount=sed -n'1p' $save
+	birdCount=sed -n '2p' $save
+	dayCount=sed -n '3p' $save
+	chance=sed -n '4p' $save
+}
 
 function attack() {
 	clear
@@ -41,9 +56,168 @@ function cont() {
 	read -p "Press enter to continue..."
 }
 
+function maximus() {
+	local option
+	if [ "$dayCount" == 1 ] || [ $chance < 3 ]; then
+		chance=$((1 + RANDOM % 2))
+	fi
+	local answer
+	local bribe
+	echo
+	echo "What do you want, peasant?"
+	select option in Help Bribe Leave Quit; do
+        	case "$option" in
+			"Help")
+				echo "So you want my help do you?"
+				echo "Fine, I'll tell you about the other cats."
+				read -p "What cat do you want to know about? (2-9, l to leave, q to quit): " answer
+				echo
+				case "$answer" in
+					2) 
+						if [ "$chance" == 1 ]; then
+							echo "This cat acts like a general and orders all the other cats around."
+							echo "He doesn't like the new cats like you who have no skill."
+							# Insert echo statement saying what this cat does to help
+						else
+							echo "This cat acts like a general but is a total wuss on the inside."
+							echo "You could probably go over there and take any birds you get from him if you threatened him."
+						fi
+						break
+					;;
+					3)
+						if [ "$chance" == 1 ]; then
+							echo "This cat is a neat freak and is always going on about the correct way to eat the birds."
+							echo "As long as your being neat, he'll like you. So stay neat."
+							# Insert echo statement saying what this cat does to help
+						else
+							echo "This cat is a slob who doesn't care how big a mess he makes as long as he gets his food."
+							echo "If he sees you eating and you're taking your time, he will take your dinner."
+						fi
+						break
+					;;
+					4)
+						if [ "$chance" == 1 ]; then
+							echo "This cat is a lot like you. Take that as you will."
+							echo "She's probably the only cat who would willingly get along with someone like you."
+							# Insert echo statement saying what this cat does to help
+						else
+							echo "This cat only thinks about herself and nobody else."
+							echo "If you see her, just ignore her and walk away."
+						fi
+						break
+					;;
+					5)
+						if [ "$chance" == 1 ]; then
+							echo "This cat is one you should avoid at all cost."
+							echo "They will try and do whatever they can to get other cats birds."
+							# Insert echo statement saying what this cat does to help
+						else
+							echo "This cat is just about the nicest cat you'll ever meet."
+							echo "She's a good hunter so she's willing to help out new cats like yourself."
+						fi
+						break
+					;;
+					6)
+						if [ "$chance" == 1 ]; then
+							echo "This cat likes birds. A lot."
+							echo "He'll collect other cats birds and hold on to them as reserves for himself."
+							# Insert echo statement saying what this cat does to help
+						else
+							echo "This cat isn't that big a fan of birds."
+							echo "Chances are, you can persuade him to give you his birds."
+						fi
+						break
+					;;
+					7)
+						if [ "$chance" == 1 ]; then
+							echo "This cat is mad all the time."
+							echo "It's probably best to ignore him or else you'll get yelled at."
+							# Insert echo statement saying what this cat does to help
+						else
+							echo "This cat is pretty normal aside from being a bit quite."
+							echo "You could probably ask him for help if you wanted."
+						fi
+						break
+					;;
+					8)
+						if [ "$chance" == 1 ]; then
+							echo "This cat loves hunting for birds. It's all he does."
+							echo "The one thing to watch out for is that he's super clumsy."
+							echo "If you asked, he would probably go and find some birds for you."
+						else
+							echo "This cat doesn't like going out to get birds."
+							echo "They just want to stay inside and be pampered like I am."
+						fi
+						break
+					;;
+					9)
+						if [ "$chance" == 1 ]; then
+							echo "If you ever see her, you won't be able to talk to her."
+							echo "She's super shy and is scared of the birds."
+							echo "Since she doesn't get any birds I don't know how much longer she has. Not that I care."
+						else
+							echo "This cat hates everything and everyone."
+							echo "Best just to avoid her least you want to have scars."
+						fi
+						break
+					;;
+					l|L)
+						echo "Stop wasting my precious time, flea."
+						break
+					;;
+					q|Q)
+						exit
+					;;
+					*)
+						echo "Don't test me runt."
+						echo
+					;;
+					esac
+			;;
+			"Bribe")
+				echo "Oh. What is it you have there? A bird?"
+				read -p "If your're willing, I can take it off your hands. (y/n) " bribe
+				case "$bribe" in
+					y|Y)
+						echo "Why thank you, 10."
+						if [ $birdCount -gt 0 ]; then
+							(( birdCount = $birdCount - 1 ))
+							chance=1
+						else
+							chance=3
+						fi
+						break
+					;;
+					n|N)
+						echo "Well that is a shame."
+						break
+					;;
+					"Quit")
+						exit
+					;;
+					*)
+						echo "Don't test me, runt."
+					;;
+				esac
+			;;
+			"Leave")
+				break
+			;;
+			"Quit")
+				exit
+			;;
+			*)
+				echo "Don't test me, runt."
+				echo
+			;;
+		esac
+	done
+
+	cont
+}
 function makeGarden() {
 	prefix="$PWD/$1"
-	save=$prefix/$1
+	save="$prefix/$1.txt"
 	if [ -d "$prefix" ]; then
 		read -p "Do you want to overwrite this existing save? (y/n) " overwrite
 		case "$overwrite" in
@@ -59,6 +233,11 @@ function makeGarden() {
 					break
 				fi
 				mkdir $prefix
+				save="$prefix/$prefix.txt"
+
+			;;
+			q|Q)
+				exit
 			;;
 			*)
 				echo "That is not a valid option"
@@ -66,12 +245,11 @@ function makeGarden() {
 		esac
 	else
 		mkdir $prefix
+		getSave
 	fi
 
 	touch $save
 	chmod +w $save
-	echo "birdCount $birdCount" > $save
-
 	mkdir $prefix/garden
 
 	trees=$((1 + RANDOM % 5))
@@ -99,12 +277,14 @@ function makeGarden() {
 			done
 		done
 	done
+
+	save
 }
 brk=false
 
 function birdbath() {
 	clear
-	echo "This aquatic garden attraction offers water to drink and the potential to ${GREEN}cat${NC}ch a dumb bird."
+	echo "This aquatic garden attraction offers water to drink and the potential to ${GREEN}cat${NC}ch a dumb ${CYAN}bird${NC}."
 	select option in drink "wait for a bird" leave Quit; do
 		case "$option" in
 			"drink")
@@ -116,7 +296,7 @@ function birdbath() {
 				attack
 				case "$command" in
 					"cat")
-						if [ "$location" == "birdbath" ] || [ "$location == bird" ]; then
+						if [ "$location" == "birdbath" ] || [ "$location" == "bird" ]; then
 							if [ 1 == $((1 + RANDOM % 10)) ]; then									
 								(( birdCount = $birdCount + 1 ))
 								echo "You got a bird!"
@@ -125,6 +305,10 @@ function birdbath() {
 							fi
 						else
 							echo "You knocked over the bird bath and scared away the bird!"
+							echo "The ruckus may have scared some birds from the trees."
+							echo -e "${BLINK}waiting...${NORMAL}"
+							sleep 2
+							scareRandom
 						fi
 						break
 					;;
@@ -154,6 +338,7 @@ select option in play readme Quit; do
 	case $option in
 		"play")
 			birdCount=0
+			dayCount=1
 			break
 		;;
 		"readme")
@@ -182,6 +367,7 @@ while [ "$hasFolder" == "false" ]; do
 			if [ -d  "$PWD/$folderName" ]; then
 				echo "Alright, let's get started."
 				hasFolder=true
+				save="$PWD/$folderName/$folderName.txt"
 				cont
 			else
 				echo "Uh oh. It looks like that directory doesn't exist yet."
@@ -206,8 +392,8 @@ while [ "$hasFolder" == "false" ]; do
 	esac
 done
 
-for ((i = 1 ; i < 15 ; i++)); do
-	if [ $i == 1 ]; then
+for ((dayCount ; dayCount < 15 ; dayCount++)); do
+	if [ $dayCount == 1 ]; then
 		clear
 		read -p "I see this is your first day, would you like to go through the tutorial? (y/n) " tutorial
 		case "$tutorial" in
@@ -234,10 +420,11 @@ for ((i = 1 ; i < 15 ; i++)); do
 		esac
 	fi
 	clear
-	echo "${BOLD}Day $i${NORMAL}"
+	echo "${BOLD}Day $dayCount${NORMAL}"
 	select option in Maximus Cat2 Cat3 Cat4 Cat5 Cat6 Cat7 Cat8 Cat9 Birdbath Quit; do
 		case "$option" in
 			"Maximus")
+				maximus
 				break
 			;;
 			"Cat2")
@@ -275,6 +462,7 @@ for ((i = 1 ; i < 15 ; i++)); do
 			;;
 		esac
 	done
+	save
 done
 
 echo "You finished the game with $birdCount bird(s)."
