@@ -1,11 +1,12 @@
 # scareSpecifc.sh
 # Scares away all birds "downstream" from where the first scare took place (Sends all nests to /dev/null...
 # ...in the respective stream)
-tempVal=1001
+tempVal=
 TreeIntDef="${tempVal:0:1}"
 BrnchAIntDef="${tempVal:1:1}"
 BrnchBIntDef="${tempVal:2:1}"
 BirdIntDef="${tempVal:3:1}"
+flag=0
 
 for ((i = 0; i < $nestCount; i++)); do
   tempValDef=${nestIntArray[$i]}
@@ -14,26 +15,32 @@ for ((i = 0; i < $nestCount; i++)); do
   BrnchBInt="${nestIntArray[$i]:2:1}"
   BirdInt="${nestIntArray[$i]:3:1}"
 
-  if [ $tempVal -ne $tempValDef ]; then
+  if [ $tempVal -ne $tempValDef -a $BirdInt -ne 0 ]; then
     if [ $TreeIntDef -eq $TreeInt ]; then
       if [ $BrnchAIntDef -eq $BrnchAInt ]; then
-        if [ $BirdIntDef -ne 0 -a $BirdInt -ne 0 ]; then
-          echo "Oh no! A bird flew away!"
+        if [ $BirdIntDef -ne 0 ]; then
           nestIntArray[$i]=$((nestIntArray[$i] - 1))
+          flag=1
+          echo "It looks like you scared the bird away" > ${nestArray[$i]}
         fi
       elif [ $BrnchBIntDef -eq $BrnchBInt -a $BrnchBIntDef -ne 0 -a $BrnchAIntDef -eq 0 ]; then
-        if [ $BirdIntDef -ne 0 -a $BirdInt -ne 0 ]; then
-          echo "Oh no! A bird flew away!"
+        if [ $BirdIntDef -ne 0 ]; then
           nestIntArray[$i]=$((nestIntArray[$i] - 1))
+          flag=1
+          echo "It looks like you scared the bird away" > ${nestArray[$i]}
         fi
-      elif [ $BrnchAIntDef -eq $BrnchAInt -a $BrnchBIntDef -eq 0 -a $BirdInt -ne 0 ]; then
-          echo "Oh no! A bird flew away!"
+      elif [ $BrnchAIntDef -eq $BrnchAInt -a $BrnchBIntDef -eq 0 ]; then
           nestIntArray[$i]=$((nestIntArray[$i] - 1))
-      elif [ $BrnchAIntDef -eq 0 -a $BirdInt -ne 0 ]; then
-        echo "Oh no! A bird flew away!"
-        nestIntArray[$i]=$((nestIntArray[$i] - 1))        
+          flag=1
+          echo "It looks like you scared the bird away" > ${nestArray[$i]}
+      elif [ $BrnchAIntDef -eq 0 ]; then
+        nestIntArray[$i]=$((nestIntArray[$i] - 1))
+        flag=1
+        echo "It looks like you scared the bird away" > ${nestArray[$i]}
       fi
     fi
   fi
 done
-echo ${nestIntArray[*]}
+if [ $flag -eq 1 ]; then
+  echo "Oh no! At least one bird flew away!"
+fi
