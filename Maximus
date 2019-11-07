@@ -1,0 +1,149 @@
+#!bin/bash
+#Maximus function
+Maximus () {
+	local option
+	local chance=$((1 + RANDOM % 2))
+	echo "What do you want peasent? 
+	select option in Help Bribe Return; do
+        	case "$option" in
+			"Help")
+				echo "So you want my help do you?"
+				echo "Fine, I'll tell you about the other cats."
+				read -p "What cat do you want to know about? (2-10, c to cancel)" local answer
+				case "$answer" in
+					2) 
+						if [ chance == 1 ]; then
+							echo "This cat acts like a general and orders all the other cats around."
+							echo "He doesn't like the new cats like you who have no skill."
+							# Insert echo statement saying what this cat does to help
+							echo
+						else
+							echo "This cat acts like a general but is a total wuss on the inside."
+							echo "You could probably go over there and take any birds you get from him if you threatened him."
+							echo
+						fi
+					;;
+					3)
+						if [ chance == 1 ]; then
+							echo "This cat is a neat freak and is always going on about the correct way to eat the birds."
+							echo "As long as your being neat, he'll like you. So stay neat."
+							# Insert echo statement saying what this cat does to help
+							echo
+						else
+							echo "This cat is a slob who doesn't care how big a mess he makes as long as he gets his food."
+							echo "If he sees you eating and you're taking your time, he will take your dinner."
+							echo
+						fi
+					;;
+					4)
+						if [ chance == 1 ]; then
+							echo "This cat is a lot like you. Take that as you will."
+							echo "She's probably the only cat who would willingly get along with someone like you."
+							# Insert echo statement saying what this cat does to help
+							echo
+						else
+							echo "This cat only thinks about herself and nobody else."
+							echo "If you see her, just ignore her and walk away."
+							echo
+						fi
+					;;
+					5)
+						if [ chance == 1 ]; then
+							echo "This cat is one you should avoid at all cost."
+							echo "They will try and do whatever they can to get other cats birds."
+							# Insert echo statement saying what this cat does to help
+							echo
+						else
+							echo "This cat is just about the nicest cat you'll ever meet."
+							echo "She's a good hunter so she's willing to help out new cats like yourself."
+							echo
+						fi
+					;;
+					6)
+						if [ chance == 1 ]; then
+							echo "This cat likes birds. A lot."
+							echo "He'll collect other cats birds and hold on to them as reserves for himself."
+							# Insert echo statement saying what this cat does to help
+							echo
+						else
+							echo "This cat isn't that big a fan of birds."
+							echo "Chances are, you can persuade him to give you his birds."
+							echo
+						fi
+					;;
+					7)
+						if [ chance == 1 ]; then
+							echo "This cat is mad all the time."
+							echo "It's probably best to ignore him or else you'll get yelled at."
+							# Insert echo statement saying what this cat does to help
+							echo
+						else
+							echo "This cat is pretty normal aside from being a bit quite."
+							echo "You could probably ask him for help if you wanted."
+							echo
+						fi
+					;;
+					8)
+						if [ chance == 1 ]; then
+							echo "This cat loves hunting for birds. It's all he does."
+							echo "The one thing to watch out for is that he's super clumsy."
+							echo "If you asked, he would probably go and find some birds for you."
+							echo
+						else
+							echo "This cat doesn't like going out to get birds."
+							echo "They just want to stay inside and be pampered like I am."
+							echo
+						fi
+					;;
+					9)
+						if [ chance == 1 ]; then
+							echo "If you ever see her, you won't be able to talk to her."
+							echo "She's super shy and is scared of the birds."
+							echo "Since she doesn't get any birds I don't know how much longer she has. Not that I care."
+							echo
+						else
+							echo "This cat hates everything and everyone."
+							echo "Best just to avoid her least you want to have scars."
+							echo
+						fi
+					;;
+					c|C)
+						echo "Stop wasting my precious time, flea."
+						echo
+					;;
+					*)
+						echo "Don't test me runt."
+						echo
+					;;
+					esac
+			;;
+			"Bribe")
+				echo "Oh. What is it you have there? A bird?"
+				read -p "If your're willing, I can take it off your hands. (y/n)" local bribe
+				case "$bribe" in
+					y|Y)
+						echo "Why thank you 10."
+						(( birdCount = $birdCount -1 )
+						(( $chance == 1 ))
+						echo
+					;;
+					n|N)
+						echo "Well that is ashame."
+						echo
+					;;
+					*)
+						echo "Don't test me runt."
+						echo
+					;;
+				esac
+			;;
+			"Return")
+				#Returns to the previous menu
+			;;
+			*)
+				echo "Don't test me runt."
+				echo
+			;;
+		esac
+	done
+}
