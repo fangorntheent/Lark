@@ -3,8 +3,8 @@
 Maximus () {
 	local option
 	local chance=$((1 + RANDOM % 2))
-	echo "What do you want peasent? 
-	select option in Help Bribe Return; do
+	echo "What do you want, peasant? 
+	select option in Help Bribe Leave Quit; do
         	case "$option" in
 			"Help")
 				echo "So you want my help do you?"
@@ -122,26 +122,26 @@ Maximus () {
 				read -p "If your're willing, I can take it off your hands. (y/n)" local bribe
 				case "$bribe" in
 					y|Y)
-						echo "Why thank you 10."
-						(( birdCount = $birdCount -1 )
+						echo "Why thank you, 10."
+						(( birdCount = $birdCount -1 ))
 						(( $chance == 1 ))
 						echo
 					;;
 					n|N)
-						echo "Well that is ashame."
+						echo "Well that is a shame."
 						echo
 					;;
 					*)
-						echo "Don't test me runt."
+						echo "Don't test me, runt."
 						echo
 					;;
 				esac
 			;;
-			"Return")
-				#Returns to the previous menu
+			"Leave")
+				break
 			;;
 			*)
-				echo "Don't test me runt."
+				echo "Don't test me, runt."
 				echo
 			;;
 		esac
