@@ -7,8 +7,11 @@ function maximus() {
 	local bribe
 	echo
 	echo "What do you want, peasant?"
-	select option in Help Bribe Leave Quit; do
+	select option in Talk Help Bribe Leave Quit; do
         	case "$option" in
+			"Talk")
+				echo "Why should I waste my time on meaningless chatter with you?"
+			;;
 			"Help")
 				echo "So you want my help do you?"
 				echo "Fine, I'll tell you about the other cats."
