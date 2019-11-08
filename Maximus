@@ -63,7 +63,7 @@ function maximus() {
 						if [ "$chance" == 1 ]; then
 							echo "This cat likes birds. A lot."
 							echo "He'll collect other cats birds and hold on to them as reserves for himself."
-							# Insert echo statement saying what this cat does to help
+							echo "As much ashe likes birds, apperently, there's something he's willing give them up for."
 						else
 							echo "This cat isn't that big a fan of birds."
 							echo "Chances are, you can persuade him to give you his birds."
