@@ -43,6 +43,23 @@ function attack() {
 	clear
 }
 
+function getCatLoc() {
+	local currentDir="$PWD"
+	local sizeMax="${#currentDir}"
+	local sizeMin="$(expr ${#currentDir} - 28)"
+	currentDir="${currentDir:$sizeMin:$sizeMax}"
+	currentDir=($(echo $currentDir | tr -d -c 0-9))
+	if [ "${#currentDir}" == 0 ]; then
+		currentDir=0001
+	elif [ "${#currentDir}" == 1 ]; then
+		(( currentDir=$currentDir * 1000 + 1 ))
+	elif [ "${#currentDir}" == 2 ]; then
+		(( currentDir=$currentDir * 100 + 1 ))
+	elif [ "${#currentDir}" == 3 ]; then
+		(( currentDir=$currentDir * 10 + 1 ))
+	fi
+}
+
 function scareRandom() {
 	if [ "$nestCount" == 0 ]; then
 		break
@@ -518,7 +535,6 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 		esac
 	done
 	read -p "You can now enter a command: " command
-
 	save
 done
 
