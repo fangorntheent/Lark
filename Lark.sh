@@ -20,6 +20,7 @@ function save() {
 	echo "$userName" >> $save
 	echo "${nestIntArray[*]}" >> $save
 	echo "${nestArray[*]}" >> $save
+	echo "$eggCount" >> $save
 }
 
 function getSave() {
@@ -31,6 +32,7 @@ function getSave() {
 	userName=$( sed -n '6'p $save )
 	nestIntArray=$( sed -n '7'p $save )
 	nestArray=$( sed -n '8'p $save )
+	eggCount=$( sed -n '9'p $save )
 }
 
 function attack() {
@@ -58,6 +60,7 @@ function getCatLoc() {
 	elif [ "${#currentDir}" == 3 ]; then
 		(( currentDir=$currentDir * 10 + 1 ))
 	fi
+	catLoc="$currentDir"
 }
 
 function scareRandom() {
@@ -76,6 +79,7 @@ function scareRandom() {
 }
 
 function scareSpecific() {
+	getCatLoc
 	tempVal="$catLoc" # This value should be a four-digit integer that corresponds to the scareRandom output
 	TreeIntDef="${tempVal:0:1}"
 	BrnchAIntDef="${tempVal:1:1}"
@@ -287,6 +291,114 @@ function maximus() {
 	cont
 }
 
+function cat6() {
+	local option
+	echo
+	echo "So, do you have anything for my collection?"
+	select option in Talk Trade Leave Quit; do
+		case "$option" in
+			"Talk")
+				echo "If you aren't going to do business then your a waste of my time."
+			;;
+			"Trade")
+				echo "Talking business aye. What have you got?"
+				select goods in Bird Egg Cancel Quit; do
+					case "$goods" in
+						"Bird")
+							echo "I already have plenty of birds in my collection."
+							echo "No deal."
+						;;
+						"Egg")
+							echo "Hold on, don't tell me you found an egg. Those are super rare."
+							read -p "Here's my offer: I'll take the egg. In exchange, I'll give you 5 birds? (y/n/barter)" deal
+							case "$deal" in
+								y|Y)
+									echo "Pleasure doing business with you."
+									(( eggCount = $eggCount - 1 ))
+									(( birdCount = $birdCount + 5 ))
+								;;
+								n|N)
+									echo "Not gonna take it, aye. That's fine."
+									echo "Just know that I'm always here for business."
+								;;
+								"barter"|"Barter")
+									echo "You got guts trying to barter with me but my deal isn't changing."
+								;;
+								"Quit")
+									exit
+								;;
+								*)
+									echo "So, we gotta deal or not?"
+									echo "Make your mind kid. I ain't got all day."
+								;;
+							esac
+						;;
+						"Cancel")
+							echo "Wimping out are we."
+						;;
+						"Quit")
+							exit
+						;;
+						*)
+						;;
+					esac
+				done
+			;;
+			"Leave")
+				break
+			;;
+			"Quit")
+				exit
+			;;
+			*)
+			;;
+		esac
+	done
+
+	cont
+}
+
+function cat9() {
+	local option
+	cat9BirdCount=0
+	echo
+	echo "'Whimper'"
+	select option in Talk Give Leave Quit; do
+		case "$option" in
+			"Talk")
+				echo "I-I-I'm s-sorry but I-I can't t-t-talk to o-o-others."
+			;;
+			"Give")
+				if [ "$birdount" > 0 ]; then
+					echo "You decide to leave a bird next to cat 9."
+					echo "As you leave you turn to see her looking your wayfor a moment."
+					(( birdCount = $birdCount - 1 ))
+					(( cat9BirdCount = $cat9BirdCount + 1 ))
+					if [ $cat9BirdCount == 3 ]; then
+						echo "W-Wait!"
+						echo "H-H-Here, as t-thanks for helping m-me."
+						echo "Cat 9 gives you a egg and runs off."
+						(( eggCount = $eggCount + 1 ))
+					fi
+				else
+					echo -e "You think to yourself, \"Cat 9 has to be starving.\""
+				fi
+			;;
+			"Leave")
+				break
+			;;
+			"Quit")
+				exit
+			;;
+			*)
+				echo "'Whimper'"
+			;;
+		esac
+	done
+	
+	cont
+}
+
 function makeGarden() {
 	prefix="$PWD/$1"
 	save="$prefix/$1.txt"
@@ -385,6 +497,11 @@ function birdbath() {
 						exit
 					;;
 					*)
+						echo "You knocked over the bird bath and scared away the bird!"
+						echo "The ruckus may have scared some birds from the trees."
+						echo -e "${BLINK}waiting...${NORMAL}"
+						sleep 2
+						scareRandom
 					;;
 				esac
 			;;
@@ -411,6 +528,7 @@ select option in play readme Quit; do
 			dayCount=1
 			chance=$((1 + RANDOM % 2))
 			catLoc=0001
+			eggCount=0
 			break
 		;;
 		"readme")
@@ -512,6 +630,7 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 				break
 			;;
 			"Cat6")
+				cat6
 				break
 			;;
 			"Cat7")
@@ -521,6 +640,7 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 				break
 			;;
 			"Cat9")
+				cat9
 				break
 			;;
 			"Birdbath")
