@@ -12,17 +12,25 @@ BLINK=$(tput blink)
 clear
 
 function save() {
-	echo "nestCount $nestCount" > $save
-	echo "birdCount $birdCount" >> $save
-	echo "dayCount $dayCount" >> $save
-	echo "chance $chance" >> $save
+	echo "$nestCount" > $save
+	echo "$birdCount" >> $save
+	echo "$dayCount" >> $save
+	echo "$chance" >> $save
+	echo "$catLoc" >> $save
+	echo "$userName" >> $save
+	echo "${nestIntArray[*]}" >> $save
+	echo "${nestArray[*]}" >> $save
 }
 
 function getSave() {
-	nestCount=sed -n'1p' $save
-	birdCount=sed -n '2p' $save
-	dayCount=sed -n '3p' $save
-	chance=sed -n '4p' $save
+	nestCount=$( sed -n '1'p $save )
+	birdCount=$( sed -n '2'p $save )
+	dayCount=$( sed -n '3'p $save )
+	chance=$( sed -n '4'p $save )
+	catLoc=$( sed -n '5'p $save )
+	userName=$( sed -n '6'p $save )
+	nestIntArray=$( sed -n '7'p $save )
+	nestArray=$( sed -n '8'p $save )
 }
 
 function attack() {
@@ -42,12 +50,58 @@ function scareRandom() {
 	num=$((1 + RANDOM % 3)) # Picks a random number between 1 and 3 to see if a nest is scared off
 	if [ 2 -eq $num ]; then
 		randnum=$((1 + RANDOM % $nestCount))
-		echo "${nestArray[$randnum]}"
 		echo "It looks like you scared the bird away" > ${nestArray[$randnum]}
 		echo "A bird was scared away"
 		nestIntArray[$randnum]=$((nestIntArray[$randnum] - 1))
 	else
 		echo "No birds were scared away!"
+	fi
+}
+
+function scareSpecific() {
+	tempVal="$catLoc" # This value should be a four-digit integer that corresponds to the scareRandom output
+	TreeIntDef="${tempVal:0:1}"
+	BrnchAIntDef="${tempVal:1:1}"
+	BrnchBIntDef="${tempVal:2:1}"
+	BirdIntDef="${tempVal:3:1}"
+	flag=0
+
+	echo "${nestIntArray[*]}"
+	for ((i = 1; i < $nestCount; i++)); do
+		tempValDef=${nestIntArray[$i]}
+		TreeInt="${nestIntArray[$i]:0:1}"
+		BrnchAInt="${nestIntArray[$i]:1:1}"
+		BrnchBInt="${nestIntArray[$i]:2:1}"
+		BirdInt="${nestIntArray[$i]:3:1}"
+
+		if [ "$tempVal" -ne $tempValDef ] && [ "$BirdInt" -ne 0 ]; then
+	    	if [ $TreeIntDef -eq $TreeInt ]; then
+    			if [ $BrnchAIntDef -eq $BrnchAInt ]; then
+    				if [ $BirdIntDef -ne 0 ]; then
+	    		    	nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    		    		flag=1
+    		    		echo "It looks like you scared the bird away" > ${nestArray[$i]}
+	    	    	fi
+		    	elif [ $BrnchBIntDef -eq $BrnchBInt -a $BrnchBIntDef -ne 0 -a $BrnchAIntDef -eq 0 ]; then
+    				if [ $BirdIntDef -ne 0 ]; then
+    					nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    					flag=1
+    					echo "It looks like you scared the bird away" > ${nestArray[$i]}
+		    		fi
+    			elif [ $BrnchAIntDef -eq $BrnchAInt -a $BrnchBIntDef -eq 0 ]; then
+    				nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    				flag=1
+	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
+	    		elif [ $BrnchAIntDef -eq 0 ]; then
+    				nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    				flag=1
+	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
+	    		fi
+    		fi
+		fi
+	done
+	if [ $flag -eq 1 ]; then
+ 		echo "Oh no! At least one bird flew away!"
 	fi
 }
 
@@ -58,7 +112,7 @@ function cont() {
 
 function maximus() {
 	local option
-	if [ "$dayCount" == 1 ] || [ $chance < 3 ]; then
+	if [ "$dayCount" == 1 ] || [ "$chance" -lt 3 ]; then
 		chance=$((1 + RANDOM % 2))
 	fi
 	local answer
@@ -70,7 +124,7 @@ function maximus() {
 			"Help")
 				echo "So you want my help do you?"
 				echo "Fine, I'll tell you about the other cats."
-				read -p "What cat do you want to know about? (2-9, l to leave, q to quit): " answer
+				read -p "What cat do you want to know about? (2-9), l to leave, q to quit): " answer
 				echo
 				case "$answer" in
 					2) 
@@ -215,6 +269,7 @@ function maximus() {
 
 	cont
 }
+
 function makeGarden() {
 	prefix="$PWD/$1"
 	save="$prefix/$1.txt"
@@ -245,7 +300,6 @@ function makeGarden() {
 		esac
 	else
 		mkdir $prefix
-		getSave
 	fi
 
 	touch $save
@@ -255,7 +309,6 @@ function makeGarden() {
 	trees=$((1 + RANDOM % 5))
 	nestCount=0
 	branchCount=0
-	#Trees
 	for((t = 1; t <= trees; t++)); do
 		mkdir $prefix/garden/tree$t
 		branch1=$((1 + RANDOM % 5))
@@ -269,7 +322,6 @@ function makeGarden() {
 				if [ ! -f nest ] && [ $nest == 1 ]; then
 					(( nestCount = $nestCount + 1 ))
 					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
-					touch $prefix/garden/tree$t/branch$b1/branch$b2/nest
 					echo "BIRD!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
 					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
 					nestIntArray[$nestCount]=$(( t * 1000 + b1 * 100 + b2 * 10 + 1 ))
@@ -277,10 +329,10 @@ function makeGarden() {
 			done
 		done
 	done
-
-	save
+	if [ "$nestCount" == 0 ]; then
+		nestIntArray[1]=0000
+	fi
 }
-brk=false
 
 function birdbath() {
 	clear
@@ -337,8 +389,11 @@ function birdbath() {
 select option in play readme Quit; do
 	case $option in
 		"play")
+			nestCount=0
 			birdCount=0
 			dayCount=1
+			chance=$((1 + RANDOM % 2))
+			catLoc=0001
 			break
 		;;
 		"readme")
@@ -352,10 +407,6 @@ select option in play readme Quit; do
 	esac
 done
 
-clear
-read -p "What is your name? " userName
-cat gertrude | less
-
 hasFolder=false
 command=""
 clear
@@ -368,6 +419,7 @@ while [ "$hasFolder" == "false" ]; do
 				echo "Alright, let's get started."
 				hasFolder=true
 				save="$PWD/$folderName/$folderName.txt"
+				getSave
 				cont
 			else
 				echo "Uh oh. It looks like that directory doesn't exist yet."
@@ -382,6 +434,9 @@ while [ "$hasFolder" == "false" ]; do
 			fi
 			makeGarden "$folderName"
 			hasFolder=true
+			read -p "What is your name? " userName
+			save
+			cat gertrude | less
 			cont
 		;;
 		q|Q)
@@ -462,6 +517,8 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 			;;
 		esac
 	done
+	read -p "You can now enter a command: " command
+
 	save
 done
 
