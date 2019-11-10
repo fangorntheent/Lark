@@ -7,6 +7,7 @@ function cat6() {
 		case "$option" in
 			"Talk")
 				echo "If you aren't going to do business then your a waste of my time."
+				break
 			;;
 			"Trade")
 				echo "Talking business aye. What have you got?"
@@ -15,6 +16,7 @@ function cat6() {
 						"Bird")
 							echo "I already have plenty of birds in my collection."
 							echo "No deal."
+							break
 						;;
 						"Egg")
 							echo "Hold on, don't tell me you found an egg. Those are super rare."
@@ -40,9 +42,11 @@ function cat6() {
 									echo "Make your mind kid. I ain't got all day."
 								;;
 							esac
+							break
 						;;
 						"Cancel")
 							echo "Wimping out are we."
+							break
 						;;
 						"Quit")
 							exit
