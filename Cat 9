@@ -8,6 +8,7 @@ function cat9() {
 		case "$option" in
 			"Talk")
 				echo "I-I-I'm s-sorry but I-I can't t-t-talk to o-o-others."
+				break
 			;;
 			"Give")
 				if [ $birdount -gt 0 ]; then
@@ -25,6 +26,7 @@ function cat9() {
 				else
 					echo "You think to yourself, "Cat 9 has to be starving.""
 				fi
+				break
 			;;
 			"Leave")
 				break
