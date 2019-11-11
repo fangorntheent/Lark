@@ -78,6 +78,21 @@ function scareRandom() {
 	fi
 }
 
+function goToCatLoc() {
+	TreeIntDef="${catLoc:0:1}"
+	BrnchAIntDef="${catLoc:1:1}"
+	BrnchBIntDef="${catLoc:2:1}"
+	BrnchIntBDef="${catLoc:3:1}"
+	if [ "$TreeIntDef" == 0 ]; then
+		cd "$PWD/garden"
+	elif [ "$BrnchAIntDef" ==  0]; then
+		cd "$PWD/garden/tree$TreeIntDef"
+	elif [ "$BrnchBIntDef" == 0 ]; then
+		cd "$PWD/garden/tree$TreeIntDef/branch$BrnchAIntDef"
+	else
+		cd "$PWD/garden/tree$TreeIntDef/branch$BrnchAIntDef/branch$BrnchBIntDef"
+	fi
+}
 function scareSpecific() {
 	getCatLoc
 	tempVal="$catLoc" # This value should be a four-digit integer that corresponds to the scareRandom output
@@ -303,6 +318,7 @@ function cat6() {
 		case "$option" in
 			"Talk")
 				echo "If you aren't going to do business then your a waste of my time."
+				break
 			;;
 			"Trade")
 				echo "Talking business aye. What have you got?"
@@ -311,22 +327,26 @@ function cat6() {
 						"Bird")
 							echo "I already have plenty of birds in my collection."
 							echo "No deal."
+							break
 						;;
 						"Egg")
 							echo "Hold on, don't tell me you found an egg. Those are super rare."
-							read -p "Here's my offer: I'll take the egg. In exchange, I'll give you 5 birds? (y/n/barter)" deal
+							read -p "Here's my offer: I'll take the egg. In exchange, I'll give you 5 birds? (y/n/barter) " deal
 							case "$deal" in
 								y|Y)
 									echo "Pleasure doing business with you."
 									(( eggCount = $eggCount - 1 ))
 									(( birdCount = $birdCount + 5 ))
+									break
 								;;
 								n|N)
 									echo "Not gonna take it, aye. That's fine."
 									echo "Just know that I'm always here for business."
+									break
 								;;
 								"barter"|"Barter")
 									echo "You got guts trying to barter with me but my deal isn't changing."
+									break
 								;;
 								"Quit")
 									exit
@@ -371,11 +391,12 @@ function cat9() {
 		case "$option" in
 			"Talk")
 				echo "I-I-I'm s-sorry but I-I can't t-t-talk to o-o-others."
+				break
 			;;
 			"Give")
 				if [ "$birdount" > 0 ]; then
 					echo "You decide to leave a bird next to cat 9."
-					echo "As you leave you turn to see her looking your wayfor a moment."
+					echo "As you leave you turn to see her looking your way for a moment."
 					(( birdCount = $birdCount - 1 ))
 					(( cat9BirdCount = $cat9BirdCount + 1 ))
 					if [ $cat9BirdCount == 3 ]; then
@@ -387,6 +408,7 @@ function cat9() {
 				else
 					echo -e "You think to yourself, \"Cat 9 has to be starving.\""
 				fi
+				break
 			;;
 			"Leave")
 				break
