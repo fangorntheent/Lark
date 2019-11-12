@@ -45,6 +45,73 @@ function attack() {
 	clear
 }
 
+function commandCase() {
+	echo "Enter a command in the format COMMAND FLAG PARAMETER (L to leave):"
+	read -p "$PWD > " inputCom ComArg1 ComArg2
+	case "$inputCom" in
+		"cd")
+    		if [ -d $ComArg1 ]; then
+    			echo "Climbing up $ComArg1..."
+	    		cd $ComArg1
+    		else 
+    			echo "$ComArg1 is not a directory..."
+    			echo
+	    		scareSpecific
+    		fi
+    	;;
+    	"ls")
+    	    if [ "$ComArg1" == "-a" ] || [ "$ComArg1" == "-la" ] || [ "$ComArg1" == "-al" ] || [ -d $ComArg1 ] || [ -f $ComArg1 ]; then
+	    		if [ -d $ComArg2 ] || [ -f $ComArg2 ] || [ -z $ComArg2 ];then
+    				ls $ComArg1 $ComArg2
+    			else
+    				echo "$ComArg2 is not a file or directory..."
+	    			echo
+    				scareSpecific
+    			fi
+	   		else 
+    			echo "$ComArg1 is not a valid argument..."
+	    		echo
+		    	scareSpecific
+    		fi
+	    ;;
+    	"cat")
+			if [ -f $ComArg1 ] && [ ! -z $ComArg1 ]; then
+				cat $ComArg1
+				echo
+			elif [ -z $ComArg1 ]; then
+				echo "No argument passed to cat..."
+				echo
+				scareSpecific
+			else 
+				echo "$ComArg1 is not a file..."
+				echo
+				scareSpecific
+			fi
+		;;
+		"chmod")
+			if [ "$ComArg1" == "+rwx" ] || [ "$ComArg1" == "+wrx" ] || [ "$ComArg1" == "+xrw" ] || [ "$ComArg1" == "+rxw" ] || [ "$ComArg1" == "+xwr" ] || [ "$ComArg1" == "+wxr" ] || [ "$ComArg1" == "+x" ] || [ "$ComArg1" == "+w" ] || [ "$ComArg1" == "+r" ] || [ "$ComArg1" == "+rw" ]  || [ "$ComArg1" == "+wr" ] || [ "$ComArg1" == "+xw" ] || [ "$ComArg1" == "+wx" ]  || [ "$ComArg1" == "+rx" ]  || [ "$ComArg1" == "+xr" ]; then
+				if [ -d $ComArg2 ] || [ -f $ComArg2 ]; then
+					chmod $ComArg1 $ComArg2
+				fi
+			else
+				echo "$ComArg1 and/or $ComArg2 are not valid arguments..."
+				echo
+				scareSpecific
+			fi
+		;;
+		l|L|"Leave")
+		;;
+		q|Q)
+			exit
+		;;
+		*)
+			echo "$inputCom is not a valid command..."
+			echo
+			scareSpecific
+		;;
+	esac
+}
+
 function getCatLoc() {
 	local currentDir="$PWD"
 	local sizeMax="${#currentDir}"
@@ -103,7 +170,6 @@ function scareSpecific() {
 	BirdIntDef="${tempVal:3:1}"
 	flag=0
 
-	echo "${nestIntArray[*]}"
 	for ((i = 1; i < $nestCount; i++)); do
 		tempValDef=${nestIntArray[$i]}
 		TreeInt="${nestIntArray[$i]:0:1}"
@@ -426,70 +492,6 @@ function cat9() {
 	cont
 }
 
-function makeGarden() {
-	prefix="$PWD/$1"
-	save="$prefix/$1.txt"
-	if [ -d "$prefix" ]; then
-		read -p "Do you want to overwrite this existing save? (y/n) " overwrite
-		case "$overwrite" in
-			y|Y)
-				rm -r $prefix
-				mkdir $prefix
-			;;
-			n|N)
-				read -p "Please enter a new save name: " prefix
-				if [ "$prefix" == "q" ] || [ "$prefix" == "Q" ]; then
-					exit
-				elif [ -d $prefix ]; then
-					break
-				fi
-				mkdir $prefix
-				save="$prefix/$prefix.txt"
-
-			;;
-			q|Q)
-				exit
-			;;
-			*)
-				echo "That is not a valid option"
-			;;
-		esac
-	else
-		mkdir $prefix
-	fi
-
-	touch $save
-	chmod +w $save
-	mkdir $prefix/garden
-
-	trees=$((1 + RANDOM % 5))
-	nestCount=0
-	branchCount=0
-	for((t = 1; t <= trees; t++)); do
-		mkdir $prefix/garden/tree$t
-		branch1=$((1 + RANDOM % 5))
-		for((b1 = 1; b1 <= branch1; b1++)); do
-			mkdir $prefix/garden/tree$t/branch$b1
-			branch2=$((1 + RANDOM % 5))
-			for((b2 = 1; b2 <= branch2; b2++)); do
-				mkdir $prefix/garden/tree$t/branch$b1/branch$b2
-				nest=$((1 + RANDOM % 10))
-				(( branchCount = $branchCount + 1 ))
-				if [ ! -f nest ] && [ $nest == 1 ]; then
-					(( nestCount = $nestCount + 1 ))
-					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
-					echo "BIRD!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
-					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
-					nestIntArray[$nestCount]=$(( t * 1000 + b1 * 100 + b2 * 10 + 1 ))
-				fi
-			done
-		done
-	done
-	if [ "$nestCount" == 0 ]; then
-		nestIntArray[1]=0000
-	fi
-}
-
 function birdbath() {
 	clear
 	echo "This aquatic garden attraction offers water to drink and the potential to ${GREEN}cat${NC}ch a dumb ${CYAN}bird${NC}."
@@ -546,6 +548,70 @@ function birdbath() {
 	cont
 }
 
+function makeGarden() {
+	prefix="$PWD/$1"
+	save="$prefix/.$1.txt"
+	if [ -d "$prefix" ]; then
+		read -p "Do you want to overwrite this existing save? (y/n) " overwrite
+		case "$overwrite" in
+			y|Y)
+				rm -r $prefix
+				mkdir $prefix
+			;;
+			n|N)
+				read -p "Please enter a new save name: " prefix
+				if [ "$prefix" == "q" ] || [ "$prefix" == "Q" ]; then
+					exit
+				elif [ -d $prefix ]; then
+					break
+				fi
+				mkdir $prefix
+				save="$prefix/.$prefix.txt"
+
+			;;
+			q|Q)
+				exit
+			;;
+			*)
+				echo "That is not a valid option"
+			;;
+		esac
+	else
+		mkdir $prefix
+	fi
+
+	touch $save
+	chmod +w $save
+	mkdir $prefix/garden
+
+	trees=$((1 + RANDOM % 5))
+	nestCount=0
+	branchCount=0
+	for((t = 1; t <= trees; t++)); do
+		mkdir $prefix/garden/tree$t
+		branch1=$((1 + RANDOM % 5))
+		for((b1 = 1; b1 <= branch1; b1++)); do
+			mkdir $prefix/garden/tree$t/branch$b1
+			branch2=$((1 + RANDOM % 5))
+			for((b2 = 1; b2 <= branch2; b2++)); do
+				mkdir $prefix/garden/tree$t/branch$b1/branch$b2
+				nest=$((1 + RANDOM % 10))
+				(( branchCount = $branchCount + 1 ))
+				if [ ! -f nest ] && [ $nest == 1 ]; then
+					(( nestCount = $nestCount + 1 ))
+					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
+					echo "BIRD!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
+					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
+					nestIntArray[$nestCount]=$(( t * 1000 + b1 * 100 + b2 * 10 + 1 ))
+				fi
+			done
+		done
+	done
+	if [ "$nestCount" == 0 ]; then
+		nestIntArray[1]=0000
+	fi
+}
+
 #user start
 select option in play readme Quit; do
 	case $option in
@@ -580,7 +646,7 @@ while [ "$hasFolder" == "false" ]; do
 			if [ -d  "$PWD/$folderName" ]; then
 				echo "Alright, let's get started."
 				hasFolder=true
-				save="$PWD/$folderName/$folderName.txt"
+				save="$PWD/$folderName/.$folderName.txt"
 				getSave
 				cont
 			else
@@ -608,6 +674,8 @@ while [ "$hasFolder" == "false" ]; do
 		;;
 	esac
 done
+
+cd $prefix/garden
 
 for ((dayCount ; dayCount < 15 ; dayCount++)); do
 	if [ $dayCount == 1 ]; then
@@ -677,7 +745,8 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 			;;
 		esac
 	done
-	read -p "You can now enter a command: " command
+	commandCase
+	cont
 	save
 done
 
