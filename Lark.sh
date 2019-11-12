@@ -706,7 +706,7 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 	fi
 	clear
 	echo "${BOLD}Day $dayCount${NORMAL}"
-	select option in Maximus Cat2 Cat3 Cat4 Cat5 Cat6 Cat7 Cat8 Cat9 Birdbath Quit; do
+	select option in Maximus Cat2 Cat3 Cat4 Cat5 Cat6 Cat7 Cat8 Cat9 Birdbath Skip Quit; do
 		case "$option" in
 			"Maximus")
 				maximus
@@ -737,6 +737,9 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 			;;
 			"Birdbath")
 				birdbath
+			;;
+			"Skip")
+				break
 			;;
 			"Quit")
 				exit
