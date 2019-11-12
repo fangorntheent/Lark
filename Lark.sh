@@ -63,21 +63,6 @@ function getCatLoc() {
 	catLoc="$currentDir"
 }
 
-function scareRandom() {
-	if [ "$nestCount" == 0 ]; then
-		break
-	fi
-	num=$((1 + RANDOM % 3)) # Picks a random number between 1 and 3 to see if a nest is scared off
-	if [ 2 -eq $num ]; then
-		randnum=$((1 + RANDOM % $nestCount))
-		echo "It looks like you scared the bird away" > ${nestArray[$randnum]}
-		echo "A bird was scared away"
-		nestIntArray[$randnum]=$((nestIntArray[$randnum] - 1))
-	else
-		echo "No birds were scared away!"
-	fi
-}
-
 function goToCatLoc() {
 	TreeIntDef="${catLoc:0:1}"
 	BrnchAIntDef="${catLoc:1:1}"
@@ -93,6 +78,22 @@ function goToCatLoc() {
 		cd "$PWD/garden/tree$TreeIntDef/branch$BrnchAIntDef/branch$BrnchBIntDef"
 	fi
 }
+
+function scareRandom() {
+	if [ "$nestCount" == 0 ]; then
+		break
+	fi
+	num=$((1 + RANDOM % 3)) # Picks a random number between 1 and 3 to see if a nest is scared off
+	if [ 2 -eq $num ]; then
+		randnum=$((1 + RANDOM % $nestCount))
+		echo "It looks like you scared the bird away" > ${nestArray[$randnum]}
+		echo "A bird was scared away"
+		nestIntArray[$randnum]=$((nestIntArray[$randnum] - 1))
+	else
+		echo "No birds were scared away!"
+	fi
+}
+
 function scareSpecific() {
 	getCatLoc
 	tempVal="$catLoc" # This value should be a four-digit integer that corresponds to the scareRandom output
@@ -159,7 +160,7 @@ function maximus() {
         	case "$option" in
         	"Talk")
 				echo "Why should I waste my time on meaningless chatter with you?"
-				break
+				break 2
 			;;
 			"Help")
 				echo "So you want my help do you?"
@@ -176,7 +177,7 @@ function maximus() {
 							echo "This cat acts like a general but is a total wuss on the inside."
 							echo "You could probably go over there and take any birds you get from him if you threatened him."
 						fi
-						break
+						break 2
 					;;
 					3)
 						if [ "$chance" == 1 ]; then
@@ -187,7 +188,7 @@ function maximus() {
 							echo "This cat is a slob who doesn't care how big a mess he makes as long as he gets his food."
 							echo "If he sees you eating and you're taking your time, he will take your dinner."
 						fi
-						break
+						break 2
 					;;
 					4)
 						if [ "$chance" == 1 ]; then
@@ -198,7 +199,7 @@ function maximus() {
 							echo "This cat only thinks about herself and nobody else."
 							echo "If you see her, just ignore her and walk away."
 						fi
-						break
+						break 2
 					;;
 					5)
 						if [ "$chance" == 1 ]; then
@@ -209,7 +210,7 @@ function maximus() {
 							echo "This cat is just about the nicest cat you'll ever meet."
 							echo "She's a good hunter so she's willing to help out new cats like yourself."
 						fi
-						break
+						break 2
 					;;
 					6)
 						if [ "$chance" == 1 ]; then
@@ -220,7 +221,7 @@ function maximus() {
 							echo "This cat isn't that big a fan of birds."
 							echo "Chances are, you can persuade him to give you his birds."
 						fi
-						break
+						break 2
 					;;
 					7)
 						if [ "$chance" == 1 ]; then
@@ -231,7 +232,7 @@ function maximus() {
 							echo "This cat is pretty normal aside from being a bit quite."
 							echo "You could probably ask him for help if you wanted."
 						fi
-						break
+						break 2
 					;;
 					8)
 						if [ "$chance" == 1 ]; then
@@ -242,7 +243,7 @@ function maximus() {
 							echo "This cat doesn't like going out to get birds."
 							echo "They just want to stay inside and be pampered like I am."
 						fi
-						break
+						break 2
 					;;
 					9)
 						if [ "$chance" == 1 ]; then
@@ -253,11 +254,11 @@ function maximus() {
 							echo "This cat hates everything and everyone."
 							echo "Best just to avoid her least you want to have scars."
 						fi
-						break
+						break 2
 					;;
 					l|L)
 						echo "Stop wasting my precious time, flea."
-						break
+						break 2
 					;;
 					q|Q)
 						exit
@@ -280,11 +281,11 @@ function maximus() {
 						else
 							chance=3
 						fi
-						break
+						break 2
 					;;
 					n|N)
 						echo "Well that is a shame."
-						break
+						break 2
 					;;
 					"Quit")
 						exit
@@ -318,7 +319,7 @@ function cat6() {
 		case "$option" in
 			"Talk")
 				echo "If you aren't going to do business then your a waste of my time."
-				break
+				break 2
 			;;
 			"Trade")
 				echo "Talking business aye. What have you got?"
@@ -327,7 +328,7 @@ function cat6() {
 						"Bird")
 							echo "I already have plenty of birds in my collection."
 							echo "No deal."
-							break
+							break 2
 						;;
 						"Egg")
 							echo "Hold on, don't tell me you found an egg. Those are super rare."
@@ -337,16 +338,16 @@ function cat6() {
 									echo "Pleasure doing business with you."
 									(( eggCount = $eggCount - 1 ))
 									(( birdCount = $birdCount + 5 ))
-									break
+									break 2
 								;;
 								n|N)
 									echo "Not gonna take it, aye. That's fine."
 									echo "Just know that I'm always here for business."
-									break
+									break 2
 								;;
 								"barter"|"Barter")
 									echo "You got guts trying to barter with me but my deal isn't changing."
-									break
+									break 2
 								;;
 								"Quit")
 									exit
@@ -391,7 +392,7 @@ function cat9() {
 		case "$option" in
 			"Talk")
 				echo "I-I-I'm s-sorry but I-I can't t-t-talk to o-o-others."
-				break
+				break 2
 			;;
 			"Give")
 				if [ "$birdount" > 0 ]; then
@@ -408,7 +409,7 @@ function cat9() {
 				else
 					echo -e "You think to yourself, \"Cat 9 has to be starving.\""
 				fi
-				break
+				break 2
 			;;
 			"Leave")
 				break
@@ -496,7 +497,7 @@ function birdbath() {
 		case "$option" in
 			"drink")
 				echo "You take a sip of the stagnant water and think you just got a new parasite."
-				break
+				break 2
 			;;
 			"wait for a bird")
 				read -p ": " command location
@@ -517,7 +518,7 @@ function birdbath() {
 							sleep 2
 							scareRandom
 						fi
-						break
+						break 2
 					;;
 					q|Q)
 						exit
@@ -641,7 +642,6 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 		case "$option" in
 			"Maximus")
 				maximus
-				break
 			;;
 			"Cat2")
 				break
@@ -657,7 +657,6 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 			;;
 			"Cat6")
 				cat6
-				break
 			;;
 			"Cat7")
 				break
@@ -667,11 +666,9 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 			;;
 			"Cat9")
 				cat9
-				break
 			;;
 			"Birdbath")
 				birdbath
-				break
 			;;
 			"Quit")
 				exit
