@@ -1,59 +1,66 @@
-# Replace TEST COMMAND PROMPT with any desired output or make it blank  
-read -p "TEST COMMAND PROMPT: " inputCom ComArg1 ComArg2
-case "$inputCom" in
-  cd)
-    if [ -d $ComArg1 ]; then
-      echo "Changing to directory $ComArg1..."
-      cd $ComArg1
-    else 
-      echo "$ComArg1 is not a directory..."
-      echo
-      scareSpecific
-    fi
-  ;;
-  ls)
-    if [ "$ComArg1" == "-a" ] || [ "$ComArg1" == "-la" ] || [ "$ComArg1" == "-al" ] || [ -d $ComArg1 ] || [ -f $ComArg1 ]; then
-      if [ -d $ComArg2 ] || [ -f $ComArg2 ] || [ -z $ComArg2 ];then
-        ls $ComArg1 $ComArg2
-      else
-        echo "$ComArg2 is not a file or directory..."
-        echo
-        scareSpecific
-      fi
-    else 
-      echo "$ComArg1 is not a valid argument..."
-      echo
-      scareSpecific
-    fi
-  ;;
-  cat)
-    if [ -f $ComArg1 ] && [ ! -z $ComArg1 ]; then
-      cat $ComArg1
-      echo
-    elif [ -z $ComArg1 ]; then
-      echo "No argument passed to cat..."
-      echo
-      scareSpecific
-    else 
-      echo "$ComArg1 is not a file..."
-      echo
-      scareSpecific
-    fi
-  ;;
-  chmod)
-    if [ "$ComArg1" == "+rwx" ] || [ "$ComArg1" == "+wrx" ] || [ "$ComArg1" == "+xrw" ] || [ "$ComArg1" == "+rxw" ] || [ "$ComArg1" == "xwr+" ] || [ "$ComArg1" == "+wxr" ] || [ "$ComArg1" == "+x" ] || [ "$ComArg1" == "+w" ] || [ "$ComArg1" == "+x" ] || [ "$ComArg1" == "+r" ] || [ "$ComArg1" == "+rw" ]  || [ "$ComArg1" == "wr" ] || [ "$ComArg1" == "+xw" ] || [ "$ComArg1" == "+wx" ]  || [ "$ComArg1" == "+rx" ]  || [ "$ComArg1" == "+xr" ]; then
-      if [ -d $ComArg2 ] || [ -f $ComArg2 ]; then
-        chmod $ComArg1 $ComArg2
-      fi
-    else
-      echo "$ComArg1 and/or $ComArg2 are not valid arguments..."
-      echo
-      scareSpecific
-    fi
-  ;;
-  *)
-    echo "$inputCom is not a valid command..."
-    echo
-    scareSpecific
-  ;;
-esac
+function commandCase() {
+	echo "Enter a command in the format COMMAND FLAG PARAMETER (L to leave):"
+	read -p "$PWD > " inputCom ComArg1 ComArg2
+	case "$inputCom" in
+		"cd")
+    		if [ -d $ComArg1 ]; then
+    			echo "Climbing up $ComArg1..."
+	    		cd $ComArg1
+    		else 
+    			echo "$ComArg1 is not a directory..."
+    			echo
+	    		scareSpecific
+    		fi
+    	;;
+    	"ls")
+    	    if [ "$ComArg1" == "-a" ] || [ "$ComArg1" == "-la" ] || [ "$ComArg1" == "-al" ] || [ -d $ComArg1 ] || [ -f $ComArg1 ]; then
+	    		if [ -d $ComArg2 ] || [ -f $ComArg2 ] || [ -z $ComArg2 ];then
+    				ls $ComArg1 $ComArg2
+    			else
+    				echo "$ComArg2 is not a file or directory..."
+	    			echo
+    				scareSpecific
+    			fi
+	   		else 
+    			echo "$ComArg1 is not a valid argument..."
+	    		echo
+		    	scareSpecific
+    		fi
+	    ;;
+    	"cat")
+			if [ -f $ComArg1 ] && [ ! -z $ComArg1 ]; then
+				cat $ComArg1
+				echo
+			elif [ -z $ComArg1 ]; then
+				echo "No argument passed to cat..."
+				echo
+				scareSpecific
+			else 
+				echo "$ComArg1 is not a file..."
+				echo
+				scareSpecific
+			fi
+		;;
+		"chmod")
+			if [ "$ComArg1" == "+rwx" ] || [ "$ComArg1" == "+wrx" ] || [ "$ComArg1" == "+xrw" ] || [ "$ComArg1" == "+rxw" ] || [ "$ComArg1" == "+xwr" ] || [ "$ComArg1" == "+wxr" ] || [ "$ComArg1" == "+x" ] || [ "$ComArg1" == "+w" ] || [ "$ComArg1" == "+r" ] || [ "$ComArg1" == "+rw" ]  || [ "$ComArg1" == "+wr" ] || [ "$ComArg1" == "+xw" ] || [ "$ComArg1" == "+wx" ]  || [ "$ComArg1" == "+rx" ]  || [ "$ComArg1" == "+xr" ]; then
+				if [ -d $ComArg2 ] || [ -f $ComArg2 ]; then
+					chmod $ComArg1 $ComArg2
+				fi
+			else
+				echo "$ComArg1 and/or $ComArg2 are not valid arguments..."
+				echo
+				scareSpecific
+			fi
+		;;
+		l|L|"Leave")
+		;;
+		q|Q)
+			exit
+		;;
+		*)
+			echo "$inputCom is not a valid command..."
+			echo
+			scareSpecific
+		;;
+	esac
+}
