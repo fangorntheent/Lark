@@ -13,13 +13,13 @@ case "$inputCom" in
   ;;
   ls)
     if [ "$ComArg1" == "-a" ] || [ "$ComArg1" == "-la" ] || [ "$ComArg1" == "-al" ] || [ -d $ComArg1 ] || [ -f $ComArg1 ]; then
-    if [ -d $ComArg2 ] || [ -f $ComArg2 ] || [ -z $ComArg2 ];then
-      ls $ComArg1 $ComArg2
-    else
-      echo "$ComArg2 is not a file or directory..."
-      echo
-      scareSpecific
-    fi
+      if [ -d $ComArg2 ] || [ -f $ComArg2 ] || [ -z $ComArg2 ];then
+        ls $ComArg1 $ComArg2
+      else
+        echo "$ComArg2 is not a file or directory..."
+        echo
+        scareSpecific
+      fi
     else 
       echo "$ComArg1 is not a valid argument..."
       echo
