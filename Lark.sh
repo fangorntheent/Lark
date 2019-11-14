@@ -21,6 +21,7 @@ function save() {
 	echo "${nestIntArray[*]}" >> $save
 	echo "${nestArray[*]}" >> $save
 	echo "$eggCount" >> $save
+	echo "$cat9BirdCount" >> $save
 }
 
 function getSave() {
@@ -33,6 +34,7 @@ function getSave() {
 	nestIntArray=$( sed -n '7'p $save )
 	nestArray=$( sed -n '8'p $save )
 	eggCount=$( sed -n '9'p $save )
+	cat9BirdCount=$( sed -n '10'p $save )
 }
 
 function attack() {
@@ -406,7 +408,7 @@ function cat6() {
 						"Bird")
 							echo "I already have plenty of birds in my collection."
 							echo "No deal."
-							break 2
+							break 3
 						;;
 						"Egg")
 							echo "Hold on, don't tell me you found an egg. Those are super rare."
@@ -416,16 +418,16 @@ function cat6() {
 									echo "Pleasure doing business with you."
 									(( eggCount = $eggCount - 1 ))
 									(( birdCount = $birdCount + 5 ))
-									break 2
+									break 3
 								;;
 								n|N)
 									echo "Not gonna take it, aye. That's fine."
 									echo "Just know that I'm always here for business."
-									break 2
+									break 3
 								;;
 								"barter"|"Barter")
 									echo "You got guts trying to barter with me but my deal isn't changing."
-									break 2
+									break 3
 								;;
 								"Quit")
 									exit
@@ -463,7 +465,6 @@ function cat6() {
 
 function cat9() {
 	local option
-	cat9BirdCount=0
 	echo
 	echo "'Whimper'"
 	select option in Talk Give Leave Quit; do
@@ -473,16 +474,17 @@ function cat9() {
 				break 2
 			;;
 			"Give")
-				if [ "$birdount" > 0 ]; then
+				if [ "$birdCount" -gt 0 ]; then
 					echo "You decide to leave a bird next to cat 9."
 					echo "As you leave you turn to see her looking your way for a moment."
 					(( birdCount = $birdCount - 1 ))
 					(( cat9BirdCount = $cat9BirdCount + 1 ))
-					if [ $cat9BirdCount == 3 ]; then
+					if [ "$cat9BirdCount" == 3 ]; then
 						echo "W-Wait!"
 						echo "H-H-Here, as t-thanks for helping m-me."
 						echo "Cat 9 gives you a egg and runs off."
 						(( eggCount = $eggCount + 1 ))
+						cat9BirdCount=-1000
 					fi
 				else
 					echo -e "You think to yourself, \"Cat 9 has to be starving.\""
@@ -646,6 +648,7 @@ select option in play readme Quit; do
 			chance=$((1 + RANDOM % 2))
 			catLoc=0001
 			eggCount=0
+			cat9BirdCount=0
 			break
 		;;
 		"readme")
