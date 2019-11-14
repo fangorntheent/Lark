@@ -34,6 +34,11 @@ function commandCase() {
 			if [ -f $ComArg1 ] && [ ! -z $ComArg1 ]; then
 				cat $ComArg1
 				echo
+        			birdTestVar=$( cat $ComArg1 )
+				if [ $birdTestVar == "BIRD!" ]; then
+          				echo "You caught this bird!" > $ComArg1
+          				(( birdCount = $birdCount + 1 ))
+        			fi
 			elif [ -z $ComArg1 ]; then
 				echo "No argument passed to cat..."
 				echo
