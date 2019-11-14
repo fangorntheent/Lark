@@ -15,7 +15,7 @@ function commandCase() {
     		commandCase
     	;;
     	"ls")
-    	    if [ "$ComArg1" == "-a" ] || [ "$ComArg1" == "-la" ] || [ "$ComArg1" == "-al" ] || [ -d $ComArg1 ] || [ -f $ComArg1 ]; then
+		if [ "$ComArg1" == "-a" ] || [ "$ComArg1" == "-la" ] || [ "$ComArg1" == "-al" ] || [ -d $ComArg1 ] || [ -f $ComArg1 ]; then
 	    		if [ -d $ComArg2 ] || [ -f $ComArg2 ] || [ -z $ComArg2 ];then
     				ls $ComArg1 $ComArg2
     			else
@@ -23,7 +23,7 @@ function commandCase() {
 	    			echo
     				scareSpecific
     			fi
-	   		else 
+		else 
     			echo "$ComArg1 is not a valid argument..."
 	    		echo
 		    	scareSpecific
