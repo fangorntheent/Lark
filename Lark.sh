@@ -22,6 +22,7 @@ function save() {
 	echo "${nestArray[*]}" >> $save
 	echo "$eggCount" >> $save
 	echo "$cat9BirdCount" >> $save
+	echo "$hardMode" >> $save
 }
 
 function getSave() {
@@ -35,6 +36,7 @@ function getSave() {
 	nestArray=$( sed -n '8'p $save )
 	eggCount=$( sed -n '9'p $save )
 	cat9BirdCount=$( sed -n '10'p $save )
+	hardMode=$( sed -n '11'p $save )
 }
 
 function attack() {
@@ -563,6 +565,8 @@ function birdbath() {
 }
 
 function makeGarden() {
+	local difficulty=1
+	local nestDifficulty=12
 	prefix="$PWD/$1"
 	save="$prefix/.$1.txt"
 	if [ -d "$prefix" ]; then
@@ -571,6 +575,20 @@ function makeGarden() {
 			y|Y)
 				rm -r $prefix
 				mkdir $prefix
+				read -p "Would you like to play on hard mode? (y/n) " hardOn
+				case "$hardOn" in
+					y|Y)
+						hardMode=1
+					;;
+					n|N)
+						hardMode=0
+					;;
+					q|Q)
+						exit
+					;;
+					*)
+					;;
+				esac
 			;;
 			n|N)
 				read -p "Please enter a new save name: " prefix
@@ -598,18 +616,23 @@ function makeGarden() {
 	chmod +w $save
 	mkdir $prefix/garden
 
+	if [ "$hardMode" == 1 ]; then
+		difficulty=5
+		nestDifficulty=75
+	fi
+
 	nestCount=0
 	branchCount=0
-	trees=$((1 + RANDOM % 5))
+	trees=$(($difficulty + RANDOM % 5))
 	for((t = 1; t <= trees; t++)); do
 		mkdir $prefix/garden/tree$t
-		branch1=$((1 + RANDOM % 5))
+		branch1=$(($difficulty + RANDOM % 5))
 		for((b1 = 1; b1 <= branch1; b1++)); do
 			mkdir $prefix/garden/tree$t/branch$b1
-			branch2=$((1 + RANDOM % 5))
+			branch2=$(($difficulty + RANDOM % 5))
 			for((b2 = 1; b2 <= branch2; b2++)); do
 				mkdir $prefix/garden/tree$t/branch$b1/branch$b2
-				nest=$((1 + RANDOM % 10))
+				nest=$((1 + RANDOM % $nestDifficulty))
 				(( branchCount = $branchCount + 1 ))
 				if [ ! -f nest ] && [ $nest == 1 ]; then
 					(( nestCount = $nestCount + 1 ))
@@ -621,12 +644,14 @@ function makeGarden() {
 		done
 	done
 
+	echo "$branchCount"
+
 	if [ "$nestCount" == 0 ]; then
 		location=false
 		while [ "$location" == "false" ]; do
-			trees=$((1 + RANDOM % 5))
-			branch1=$((1 + RANDOM % 5))
-			branch2=$((1 + RANDOM % 5))
+			trees=$(($difficulty + RANDOM % 5))
+			branch1=$(($difficulty + RANDOM % 5))
+			branch2=$(($difficulty + RANDOM % 5))
 			if [ -d "$prefix/garden/tree$trees/branch$branch1/branch$branch2" ]; then
 				(( nestCount = $nestCount + 1 ))
 				nestArray[$nestCount]="$prefix/garden/tree$trees/branch$branch1/branch$branch2/nest"
@@ -649,6 +674,7 @@ select option in play readme Quit; do
 			catLoc=0001
 			eggCount=0
 			cat9BirdCount=0
+			hardMode=0
 			break
 		;;
 		"readme")
