@@ -46,18 +46,20 @@ function attack() {
 }
 
 function commandCase() {
-	echo "Enter a command in the format COMMAND FLAG PARAMETER (L to leave):"
+	echo
+	echo "Enter a command in the format COMMAND [FLAG] PARAMETER (s to skip):"
 	read -p "$PWD > " inputCom ComArg1 ComArg2
 	case "$inputCom" in
 		"cd")
     		if [ -d $ComArg1 ]; then
-    			echo "Climbing up $ComArg1..."
+    			echo "Climbing to $ComArg1..."
 	    		cd $ComArg1
     		else 
-    			echo "$ComArg1 is not a directory..."
+    			echo "$ComArg1 is not a directory.."
     			echo
 	    		scareSpecific
     		fi
+    		commandCase
     	;;
     	"ls")
     	    if [ "$ComArg1" == "-a" ] || [ "$ComArg1" == "-la" ] || [ "$ComArg1" == "-al" ] || [ -d $ComArg1 ] || [ -f $ComArg1 ]; then
@@ -73,6 +75,7 @@ function commandCase() {
 	    		echo
 		    	scareSpecific
     		fi
+    		commandCase
 	    ;;
     	"cat")
 			if [ -f $ComArg1 ] && [ ! -z $ComArg1 ]; then
@@ -87,6 +90,7 @@ function commandCase() {
 				echo
 				scareSpecific
 			fi
+			commandCase
 		;;
 		"chmod")
 			if [ "$ComArg1" == "+rwx" ] || [ "$ComArg1" == "+wrx" ] || [ "$ComArg1" == "+xrw" ] || [ "$ComArg1" == "+rxw" ] || [ "$ComArg1" == "+xwr" ] || [ "$ComArg1" == "+wxr" ] || [ "$ComArg1" == "+x" ] || [ "$ComArg1" == "+w" ] || [ "$ComArg1" == "+r" ] || [ "$ComArg1" == "+rw" ]  || [ "$ComArg1" == "+wr" ] || [ "$ComArg1" == "+xw" ] || [ "$ComArg1" == "+wx" ]  || [ "$ComArg1" == "+rx" ]  || [ "$ComArg1" == "+xr" ]; then
@@ -98,8 +102,9 @@ function commandCase() {
 				echo
 				scareSpecific
 			fi
+			commandCase
 		;;
-		l|L|"Leave")
+		s|S|"Skip")
 		;;
 		q|Q)
 			exit
@@ -108,6 +113,7 @@ function commandCase() {
 			echo "$inputCom is not a valid command..."
 			echo
 			scareSpecific
+			commandCase
 		;;
 	esac
 }
@@ -664,7 +670,7 @@ while [ "$hasFolder" == "false" ]; do
 			hasFolder=true
 			read -p "What is your name? " userName
 			save
-			cat gertrude | less
+			echo -e "Cat #10, \n\tYou are in charge of feeding yourself because it is your job to hunt \n\t\tthe birds that eat my flowers.\n\tI have nine other cats just like you so I don't care if you starve.\n\tIf you want to eat you had better work hard.\n\tIf you survive for two weeks, I might bother to learn your name.\nFond regards,\n\tGertrude\n\n(Hint: Press 'q' to pretend you weren't listening)" | less
 			cont
 		;;
 		q|Q)
@@ -705,7 +711,11 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 		esac
 	fi
 	clear
-	echo "${BOLD}Day $dayCount${NORMAL}"
+	if [ $eggCount -gt 0 ]; then
+		echo "${BOLD}Day: $dayCount     | Birds: $birdCount     | Eggs: $eggCount${NORMAL}"
+	else
+		echo "${BOLD}Day: $dayCount     | Birds: $birdCount${NORMAL}"
+	fi
 	select option in Maximus Cat2 Cat3 Cat4 Cat5 Cat6 Cat7 Cat8 Cat9 Birdbath Skip Quit; do
 		case "$option" in
 			"Maximus")
