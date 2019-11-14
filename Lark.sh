@@ -154,7 +154,7 @@ function commandCase() {
 	esac
 }
 
-function setCatLoc() {
+function getLoc() {
 	local currentDir="$1"
 	local sizeMax="${#currentDir}"
 	local sizeMin="$(expr ${#currentDir} - 28)"
@@ -205,9 +205,9 @@ function scareRandom() {
 
 function scareSpecific() {
 	if [ -z "$1" ]; then
-		setCatLoc $PWD
+		getLoc $PWD
 	else
-		setCatLoc $1
+		getLoc $1
 	fi
 	tempVal="$catLoc" # This value should be a four-digit integer that corresponds to the scareRandom output
 	TreeIntDef="${tempVal:0:1}"
