@@ -42,6 +42,10 @@ function commandCase() {
 				if [ $birdTestVar == "BIRD!" ]; then
           			echo "You caught this bird!" > $ComArg1
           			(( birdCount = $birdCount + 1 ))
+				getLoc $ComArg1
+                		for ((i = 1; i < $nestCount; i++)); do
+                  		if [ "$catLoc" == "$nestIntArray[$i]" ]; then
+                    		nestIntArray[$i]=$((nestIntArray[$i] - 1))
 					return
         		fi
 			elif [ -z $ComArg1 ]; then
@@ -49,7 +53,7 @@ function commandCase() {
 				echo
 				scareSpecific
 			elif [ ! -z $ComArg1 ]; then
-				if [ -f "$pathVar1/$pathVar2/$pathVar3/$pathVar4" ] || [ -d "$pathVar1/$pathVar2/$pathVar3/$pathVar4" ] && [ ! -z $pathVar4 ]; then
+				if [ -f "$pathVar1/$pathVar2/$pathVar3/$pathVar4" ] && [ ! -z $pathVar4 ]; then
             		echo "test1"
 					echo
 					scareSpecific $ComArg1
