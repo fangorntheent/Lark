@@ -82,19 +82,45 @@ function commandCase() {
     		commandCase
 	    ;;
     	"cat")
+			pathVar1=$( echo "$ComArg1" | awk -F'/' '{print $1}' )
+			pathVar2=$( echo "$ComArg1" | awk -F'/' '{print $2}' )
+			pathVar3=$( echo "$ComArg1" | awk -F'/' '{print $3}' )
+			pathVar4=$( echo "$ComArg1" | awk -F'/' '{print $4}' )
 			if [ -f $ComArg1 ] && [ ! -z $ComArg1 ]; then
 				cat $ComArg1
 				echo
-        			birdTestVar=$( cat $ComArg1 )
+        		birdTestVar=$( cat $ComArg1 )
 				if [ $birdTestVar == "BIRD!" ]; then
           			echo "You caught this bird!" > $ComArg1
           			(( birdCount = $birdCount + 1 ))
-          			return
+					return
         		fi
 			elif [ -z $ComArg1 ]; then
 				echo "No argument passed to cat..."
 				echo
 				scareSpecific
+			elif [ ! -z $ComArg1 ]; then
+				if [ -f "$pathVar1/$pathVar2/$pathVar3/$pathVar4" ] || [ -d "$pathVar1/$pathVar2/$pathVar3/$pathVar4" ] && [ ! -z $pathVar4 ]; then
+            		echo "test1"
+					echo
+					scareSpecific $ComArg1
+				elif [ -f "$pathVar1/$pathVar2/$pathVar3" ] || [ -d "$pathVar1/$pathVar2/$pathVar3" ] && [ ! -z $pathVar3 ]; then
+            		echo "test2"
+					echo
+					scareSpecific $ComArg1
+          		elif [ -f "$pathVar1/$pathVar2" ] || [ -d "$pathVar1/$pathVar2" ] && [ ! -z $pathVar2 ]; then
+            		echo "test3"
+					echo
+					scareSpecific $ComArg1
+				elif [ -f $pathVar1 ] || [ -d $pathVar1 ] && [ ! -z $pathVar1 ]; then
+            		echo "test4"
+					echo
+					scareSpecific $ComArg1
+         		else
+         			echo "$ComArg1 is not a viable pathname or file..."
+					echo
+					scareSpecific
+				fi
 			else 
 				echo "$ComArg1 is not a file..."
 				echo
@@ -128,8 +154,8 @@ function commandCase() {
 	esac
 }
 
-function getCatLoc() {
-	local currentDir="$PWD"
+function setCatLoc() {
+	local currentDir="$1"
 	local sizeMax="${#currentDir}"
 	local sizeMin="$(expr ${#currentDir} - 28)"
 	currentDir="${currentDir:$sizeMin:$sizeMax}"
@@ -178,7 +204,11 @@ function scareRandom() {
 }
 
 function scareSpecific() {
-	getCatLoc
+	if [ -z "$1" ]; then
+		setCatLoc $PWD
+	else
+		setCatLoc $1
+	fi
 	tempVal="$catLoc" # This value should be a four-digit integer that corresponds to the scareRandom output
 	TreeIntDef="${tempVal:0:1}"
 	BrnchAIntDef="${tempVal:1:1}"
@@ -583,6 +613,9 @@ function makeGarden() {
 					n|N)
 						hardMode=0
 					;;
+					k|K|"konami")
+						hardMode=2
+					;;
 					q|Q)
 						exit
 					;;
@@ -619,6 +652,9 @@ function makeGarden() {
 	if [ "$hardMode" == 1 ]; then
 		difficulty=5
 		nestDifficulty=75
+	elif [ "$hardMode" == 2 ]; then
+		difficulty=5
+		nestDifficulty=1000
 	fi
 
 	nestCount=0
@@ -639,6 +675,18 @@ function makeGarden() {
 					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
 					echo "BIRD!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
 					nestIntArray[$nestCount]=$(( t * 1000 + b1 * 100 + b2 * 10 + 1 ))
+				elif [ ! -f nest ] && [ "$hardMode" == 2 ]; then
+					if [ $((nest % 2)) == 1 ]; then
+						echo "ROCK!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
+					elif [ $((nest % 3)) == 1 ]; then
+						echo "ROSE!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
+					elif [ $((nest % 4)) == 1 ]; then
+						echo "BALL!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
+					elif [ $((nest % 5)) == 1 ]; then
+						echo "LEAF!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
+					elif [ $((nest % 6)) == 1 ]; then
+						echo "GOAT!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
+					fi
 				fi
 			done
 		done
