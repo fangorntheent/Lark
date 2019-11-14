@@ -590,9 +590,9 @@ function makeGarden() {
 	chmod +w $save
 	mkdir $prefix/garden
 
-	trees=$((1 + RANDOM % 5))
 	nestCount=0
 	branchCount=0
+	trees=$((1 + RANDOM % 5))
 	for((t = 1; t <= trees; t++)); do
 		mkdir $prefix/garden/tree$t
 		branch1=$((1 + RANDOM % 5))
@@ -607,14 +607,26 @@ function makeGarden() {
 					(( nestCount = $nestCount + 1 ))
 					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
 					echo "BIRD!" > $prefix/garden/tree$t/branch$b1/branch$b2/nest
-					nestArray[$nestCount]="$prefix/garden/tree$t/branch$b1/branch$b2/nest"
 					nestIntArray[$nestCount]=$(( t * 1000 + b1 * 100 + b2 * 10 + 1 ))
 				fi
 			done
 		done
 	done
+
 	if [ "$nestCount" == 0 ]; then
-		nestIntArray[1]=0000
+		location=false
+		while [ "$location" == "false" ]; do
+			trees=$((1 + RANDOM % 5))
+			branch1=$((1 + RANDOM % 5))
+			branch2=$((1 + RANDOM % 5))
+			if [ -d "$prefix/garden/tree$trees/branch$branch1/branch$branch2" ]; then
+				(( nestCount = $nestCount + 1 ))
+				nestArray[$nestCount]="$prefix/garden/tree$trees/branch$branch1/branch$branch2/nest"
+				echo "BIRD!" > $prefix/garden/tree$trees/branch$branch1/branch$branch2/nest
+				nestIntArray[$nestCount]=$(( t * 1000 + b1 * 100 + b2 * 10 + 1 ))
+				location=true
+			fi
+		done
 	fi
 }
 
