@@ -49,26 +49,24 @@ function commandCase() {
 				echo
 				scareSpecific
 			elif [ ! -z $ComArg1 ]; then
-          			if [ -f $pathVar1 ] || [ -d $pathVar1 ] && [ ! -z $pathVar1 ]; then
+				if [ -f "$pathVar1/$pathVar2/$pathVar3/$pathVar4" ] || [ -d "$pathVar1/$pathVar2/$pathVar3/$pathVar4" ] && [ ! -z $pathVar4 ]; then
             				echo "test1"
 					echo
 					scareSpecific
-          			fi
-          			if [ -f "$pathVar1/$pathVar2" ] || [ -d "$pathVar1/$pathVar2" ] && [ ! -z $pathVar2 ]; then
+				elif [ -f "$pathVar1/$pathVar2/$pathVar3" ] || [ -d "$pathVar1/$pathVar2/$pathVar3" ] && [ ! -z $pathVar3 ]; then
             				echo "test2"
 					echo
 					scareSpecific
-          			fi
-          			if [ -f "$pathVar1/$pathVar2/$pathVar3" ] || [ -d "$pathVar1/$pathVar2/$pathVar3" ] && [ ! -z $pathVar3 ]; then
+          			elif [ -f "$pathVar1/$pathVar2" ] || [ -d "$pathVar1/$pathVar2" ] && [ ! -z $pathVar2 ]; then
             				echo "test3"
 					echo
 					scareSpecific
-          			fi
-				if [ -f "$pathVar1/$pathVar2/$pathVar3/$pathVar4" ] || [ -d "$pathVar1/$pathVar2/$pathVar3/$pathVar4" ] && [ ! -z $pathVar4 ]; then
+				elif [ -f $pathVar1 ] || [ -d $pathVar1 ] && [ ! -z $pathVar1 ]; then
             				echo "test4"
 					echo
 					scareSpecific
          			fi
+				echo "$ComArg1 is not a viable pathname or file..."
 				echo
 				scareSpecific
 			else 
