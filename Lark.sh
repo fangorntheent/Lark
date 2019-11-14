@@ -81,6 +81,12 @@ function commandCase() {
 			if [ -f $ComArg1 ] && [ ! -z $ComArg1 ]; then
 				cat $ComArg1
 				echo
+        			birdTestVar=$( cat $ComArg1 )
+				if [ $birdTestVar == "BIRD!" ]; then
+          			echo "You caught this bird!" > $ComArg1
+          			(( birdCount = $birdCount + 1 ))
+          			return
+        		fi
 			elif [ -z $ComArg1 ]; then
 				echo "No argument passed to cat..."
 				echo
@@ -513,7 +519,7 @@ function birdbath() {
 				case "$command" in
 					"cat")
 						if [ "$location" == "birdbath" ] || [ "$location" == "bird" ]; then
-							if [ 1 == $((1 + RANDOM % 10)) ]; then									
+							if [ 1 == $((1 + RANDOM % 5)) ]; then									
 								(( birdCount = $birdCount + 1 ))
 								echo "You got a bird!"
 							else
