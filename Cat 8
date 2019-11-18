@@ -1,5 +1,5 @@
-# Cat 7
-function cat7() {
+# Cat 8
+function cat8() {
 	local option
 	echo
 	echo "How may I be of assistance, mere apprentice?"
