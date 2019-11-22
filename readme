@@ -4,3 +4,6 @@ You are a cat newly adopted by Gertrude, a crotchety old cat lady who loves noth
 
 We hope you have fun,
 	Gus, Kevin, and Matt
+	
+	echo "Oh, $name!"
+	echo "     I'm so happy you survived! Over these past two weeks I've been so impressed by your una${CYAN}bash${NC}ed curiosity and bravery."
