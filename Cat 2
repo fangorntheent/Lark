@@ -1,0 +1,54 @@
+#Cat 2
+# Global variables needed: missionTask birdCollected previousBirdCount
+# birdCollected is just a subtraction done at the start of the day: birdCollected="$(($birdCount - $previousBirdCount))"
+# previousBirdCount is as follows: previousBirdCount=$birdCount at the start of the part of the game when you go after birds.
+function cat2() {
+	local randChance
+	local option
+	local task
+	task=2
+	echo
+	echo "Speak your mind, solider."
+	select option in Talk Mission Complete Leave Quit; do
+		case "$option" in
+			"Talk")
+				echo "I am busy organizing 9 different cats and assigning missions for them all."
+				echo "Do you really think I have time to be listening to you, solider?"
+				break 2
+			;;
+			"Mission")
+				echo "I have a mission for you, solider."
+				echo "I need you to gather some of the twigs from the bird nests."
+				randChance=$((1 + RANDOM % 10))
+				missionTask=$((#(Total bird nest count) / randChance))
+				echo "You need to get $missionTask twigs to complete the mission."
+				echo "Good luck solider."
+				task=1
+			;;
+			"Complete")
+				if [ "$task" == 1 ]; then
+					echo "How can you complete a mission that you haven't even attempted yet magot."
+				else
+					echo "Have you completeted your mission, solider?"
+					if [ "$birdCollected" >= "$missionTask" ]; then
+						echo "Well done, solider."
+						(( birdCount = $birdCount + 1 ))
+						echo "You got one bird."
+					else
+						echo "You couldn't do it I see. Better luck next time."
+						(( missionTask = $missionTask + 126 ))
+					fi
+					task=2
+				fi
+				break 2
+			;;
+			"Leave")
+				break
+			;;
+			"Quit")
+				exit
+			*)
+			;;
+		esac
+	done
+}
