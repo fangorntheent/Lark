@@ -1,0 +1,156 @@
+# Cat 3
+function cat3() {
+	local option
+	local choice
+	echo
+	echo "Stop! Don't take another step or your going to ruin the perfect grass."
+	select option Talk Question Leave Quit; do
+		case "$option" in
+			"Talk")
+				echo "I only have time to talk from 3:47:16 to 3:50:00."
+				echo "Any other time would ruin my perfect schedule."
+				break 2
+			;;
+			"Question")
+				echo "What do you want to know?"
+				echo "Each cost one bird."
+				select choice ls cat chmod; do
+					case "$option" in
+						"ls")
+							if [ birdCount >= 1 ]; then
+								#insert description for ls and ls -a
+								echo ""
+								(( birdCount = $bircCount - 1 ))
+							else
+								echo "You do know you need a bird for my flawless advice."
+							fi
+							break 2
+						;;
+						"cat")
+							if [ birdCount >= 1 ]; then
+								#insert description for cat
+								echo""
+								(( birdCount = $bircCount - 1 ))
+							else
+								echo "You do know you need a bird for my flawless advice."
+							fi
+							break 2
+						;;
+						"chmod")
+							if [ birdCount >= 1 ]
+								#insert description for chmod, -r, -w, -x
+								echo ""
+								(( birdCount = $birdCount - 1 ))
+							else
+								echo "You do know you need a bird for my flawless advice."
+							fi
+							break2
+						;;
+					esac
+				done
+				break 2
+			;;
+			"Leave")
+				break
+			;;
+			"Quit")
+				exit
+			*)
+			;;
+		esac
+	done
+}
+
+# Cat 4
+function cat4() {
+	local option
+	local randChance1
+	local randChance2
+	echo
+	echo "How've you been, 10?"
+	select option in Talk Assistance Leave Quit; do
+		case "$option" in
+			"Talk")
+				echo "I really don't have much to talk about right now. Sorry."
+				break 2
+			;;
+			"Assistance")
+				echo "If you need some help I can give you some."
+				randChance1=$((1 + RANDOM % 2))
+				if [ $randChance1 = 1 ]; then
+					randChance2=$((1 + RANDOM % 20))
+					if [ $randChance2 <= 6 ]; then
+						echo "Take this bird I got."
+						(( birdCount = $birdCount + 1 ))
+					elif [ $randChance2 >= 7 ] || [ $randChance2 <= 12 ]; then
+						echo "Take these birds I have."
+						(( birdCount = $birdCount + 2 ))
+					elif [ $randChance2 <= 13 ] || [ $randChance2 >= 15 ]; then
+						echo "Take these birds I have."
+						(( birdCount = $birdCount + 3 ))
+					elif [ $randChance2 <= 16 ] || { $randChance2 >= 18 ]; then
+						echo "Take these birds I have."
+						(( birdCount = $birdCount + 4 ))
+					elif [ $randChance2 == 19 ]; then
+						echo "Take these birds I have."
+						(( birdCount = $birdCount + 5 ))
+					fi
+					break 2
+				else
+					echo "I'm sorry but I don't have any birds I can spare today."
+					break 2
+				fi
+			;;
+			"Leave")
+				break
+			;;
+			"Quit")
+				exit
+			;;
+			*)
+			;;
+		esac
+	done
+}
+
+# Cat 5
+function cat5() {
+	local option
+	local randChance1
+	echo
+	echo "'Snickers'"
+	select option in Talk Assistance Leave Quit; do
+		case "$option" in
+			"Talk")
+				echo "'Sigh' What do you want?"
+				break 2
+			;;
+			"Help")
+				echo "So you want 'my' help do you? Fine, I'll help."
+				randChance1=$((1 + RANDOM % 20))
+				if [ $randChance1 <= 4 ]; then
+					echo "I know I was supposed to help you, but I'm gonna help myself to some of your birds."
+					echo "You don't mind, right."
+					(( birdCount = $birdCount / 2 ))
+				elif [ $randChance1 >= 6 ] || [ $randChance1 <= 8 ]; then
+					echo "Actually I'm busy right now so I'm not gonna do anything."
+				elif [ $randChance1 == 9 ] || [ $randChance1 == 10 ]; then
+					echo "This isn't going to happen again you know. Here."
+					(( birdCount = $birdCount * 1.5 ))
+					if [ ($birdCount % 2) != 0 ]; then
+						(( birdCount = $birdCount + 0.5 ))
+					fi
+				fi
+				break 2
+			;;
+			"Leave")
+				break
+			;;
+			"Quit")
+				exit
+			;;
+			*)
+			;;
+		esac
+	done
+}
