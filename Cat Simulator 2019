@@ -1,0 +1,36 @@
+Cat Simulator 2019
+Matthew Dutchess, Kevin Hilt, and Gus Lipkin
+
+
+
+Age Range: High School and up.
+
+Purpose of game: To teach the user some bash commands while giving a fun, engaging, and rewarding experience.
+
+Narrative: Meow! You’re a cat who is trying to survive in Gertrude’s garden for two weeks! Talk to other cats, climb trees, hunt for birds and much, much more! You’ll also learn some tips on how to use Unix along the way!
+
+Instructions:
+	•	Purpose
+	•	Survive for two weeks by hunting and eating birds.
+	•	Constraints
+	•	The user is only allowed to enter certain commands.
+	•	Conflict
+	•	Survive the two weeks or die trying.
+	•	Intrinsic and/or extrinsic rewards
+	•	Intrinsic: You get safe-haven with Gertrude if you win.
+	•	Extrinsic: Knowledge of Unix and a sense of accomplishment.
+	•	Growth
+	•	Start without any knowledge of the game and slowly learn the basics of how the game and Unix works. Learn from mistakes and use that knowledge to progress further than before in the game.
+	•	Winner
+	•	The user is a technical winner regardless of the outcome due to them learning something. There is also a real win if the user survives the two weeks.
+	•	List of concepts and skills learned (8 minimum)
+	•	Current directory Cat command.
+	•	Relative path Cat command.
+	•	List command
+	•	Long list command
+	•	All list command
+	•	Long list all command
+	•	Change directory command
+	•	Change directory command using relative path
+	•	Change permissions command
+	•	Make directory command
