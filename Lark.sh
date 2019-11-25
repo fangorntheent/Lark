@@ -241,15 +241,15 @@ function scareRandom() {
 
 function scareSpecific() {
 	if [ -z "$1" ]; then
-		tempVal=$( getLoc $PWD )
+		local tempVal=$( getLoc $PWD )
 	else
-		tempVal=$( getLoc $1 )
+		local tempVal=$( getLoc $1 )
 	fi
-	TreeIntDef="${tempVal:0:1}"
-	BrnchAIntDef="${tempVal:1:1}"
-	BrnchBIntDef="${tempVal:2:1}"
-	BirdIntDef="${tempVal:3:1}"
-	flag=0
+	local TreeIntDef="${tempVal:0:1}"
+	local BrnchAIntDef="${tempVal:1:1}"
+	local BrnchBIntDef="${tempVal:2:1}"
+	local BirdIntDef="${tempVal:3:1}"
+	local flag=0
 
 	for ((i = 1; i < $nestCount; i++)); do
 		tempValDef=${nestIntArray[$i]}
@@ -958,8 +958,10 @@ function birdbath() {
 function makeGarden() {
 	local difficulty=1
 	local nestDifficulty=12
+	local permArray=("" r w x rw rx wr wx xr xw rwx rxw wrx wxr xrw xwr)
 	prefix="$PWD/$1"
 	save="$prefix/.$1.txt"
+	chmod -R +rwx $prefix
 	if [ -d "$prefix" ]; then
 		read -p "Do you want to overwrite this existing save? (y/n) " overwrite
 		case "$overwrite" in
@@ -1053,8 +1055,6 @@ function makeGarden() {
 		done
 	done
 
-	echo "$branchCount"
-
 	if [ "$nestCount" == 0 ]; then
 		location=false
 		while [ "$location" == "false" ]; do
@@ -1070,6 +1070,15 @@ function makeGarden() {
 			fi
 		done
 	fi
+
+	for i in "${nestIntArray[@]}"; do
+		local TreeIntDef="${i:0:1}"
+		local BrnchAIntDef="${i:1:1}"
+		local BrnchBIntDef="${i:2:1}"
+		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef/branch$BrnchBIntDef
+		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef
+		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef
+	done
 }
 
 #user start
@@ -1084,6 +1093,8 @@ select option in play readme Quit; do
 			eggCount=0
 			cat9BirdCount=0
 			hardMode=0
+			missionTask=0
+			birdCollected=0
 			previousBirdCount=$birdCount
 			break
 		;;
