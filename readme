@@ -7,7 +7,8 @@ We hope you have fun,
 
 TO RUN:
 	Unpack the tarball into your home directory (unfortunately we don't support any other locations just yet).
-	The program should be executable already, but just to be sure, open up your terminal and run from your home directory 'chmod +x ./Lark.sh'
+	The program should be executable already, but just to be sure, open up your terminal and run from your home directory 
+	'chmod +x ./Lark.sh'
 	Now you can play the game by running './Lark.sh'
 
 PS: Press 'q' to leave this screen
