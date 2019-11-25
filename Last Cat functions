@@ -154,3 +154,60 @@ function cat5() {
 		esac
 	done
 }
+
+# Cat 7
+function cat7() {
+	local option
+	local answer
+	local clarification
+	echo
+	echo "Can't you see I'm busy?"
+	select option in Talk Quiz Leave Quit; do
+		case "$option" in
+			"Talk")
+				echo "I thought I said that I'm BUSY RIGHT NOW!"
+				break 2
+			;;
+			"Quiz")
+				echo "You really want something to do don't you? Fine then answer my question and leave me alone."
+				read -p "What is my favorite thing to do?" answer
+				case "$answer" in
+					"Paint")
+						read -p "WRONG ANS- wait, what did you say?" clarification
+						case "$clarification" in
+							"Paint")
+								echo "Wow. You actually got it. How'd you know?"
+								echo "Here. Take this."
+								(( eggCount = $eggCount + 1 ))
+								break 2
+							;;
+							"Quit")
+								exit
+							;;
+							*)
+								echo "Okay. I was just hearing things."
+								echo "Anyway, WRONG ANSWER, STUPID!"
+								break 2
+							;;
+						break 2
+					;;
+					"Quit")
+						exit
+					;;
+					*)
+						echo "WRONG ANSWER, STUPID!"
+						break 2
+					;;
+				esac	
+			;;
+			"Leave")
+				break
+			;;
+			"Quit")
+				exit
+			;;
+			*)
+			;;
+		esac
+	done
+}
