@@ -1,0 +1,13 @@
+Hello and welcome to our game!
+
+You are a cat newly adopted by Gertrude, a crotchety old cat lady who loves nothing more than yelling at kids on her lawn and tending her garden. However, lately some birds have invaded her flower patch and are eating them. She's tried putting out bird feeders but to no avail. She and her long-time companion and cat, Maximus, have adopted new cats to try and curb the bird problem.
+
+We hope you have fun,
+	Gus, Kevin, and Matt
+
+TO RUN:
+	Unpack the tarball into your home directory (unfortunately we don't support any other locations just yet).
+	The program should be executable already, but just to be sure, open up your terminal and run from your home directory 'chmod +x ./Lark.sh'
+	Now you can play the game by running './Lark.sh'
+
+PS: Press 'q' to leave this screen

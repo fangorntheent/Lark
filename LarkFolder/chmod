@@ -1,0 +1,45 @@
+CHMOD(1)                  BSD General Commands Manual                 CHMOD(1)
+
+NAME
+     chmod -- change file modes or Access Control Lists
+
+SYNOPSIS
+     chmod [-fv] [-R [-H | -L | -P]] mode file ...
+     chmod [-fv] [-R [-H | -L | -P]] [-a | +a | =a] ACE file ...
+     chmod [-fhv] [-R [-H | -L | -P]] [-E] file ...
+     chmod [-fhv] [-R [-H | -L | -P]] [-C] file ...
+     chmod [-fhv] [-R [-H | -L | -P]] [-N] file ...
+
+DESCRIPTION
+     The chmod utility modifies the file mode bits of the listed files as
+     specified by the mode operand. It may also be used to modify the Access
+     Control Lists (ACLs) associated with the listed files.
+
+EXIT STATUS
+     The chmod utility exits 0 on success, and >0 if an error occurs.
+
+MODES
+     Modes may be absolute or symbolic.
+
+     For example, the absolute mode that permits read, write and execute by
+     the owner is +rwx.
+
+     The symbolic mode is described by the following grammar:
+
+           op           ::= + | - | =
+           perm         ::= r | w | x
+
+      The perm symbols represent the portions of the mode bits as follows:
+
+           r       The read bits.
+           w       The write bits.
+           x       The execute/search bits.
+
+     The ``w'' permission on directories will permit file creation, reloca-
+     tion, and copy into that directory.  Files created within the directory
+     itself will inherit its group ID.
+
+EXAMPLES OF VALID MODES
+
+     +X            make a directory or file searchable/executable by everyone
+                   if it is already searchable/executable by anyone.
