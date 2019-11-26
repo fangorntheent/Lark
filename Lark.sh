@@ -75,7 +75,7 @@ function commandCase() {
 	read -p "$PWD > " inputCom ComArg1 ComArg2
 	case "$inputCom" in
 		"cd")
-    		if [ -d $ComArg1 ]; then
+    		if [ -d $ComArg1 ] && [ -x $ComArg1 ]; then
     			echo "Climbing to $ComArg1..."
 	    		cd $ComArg1
     		else 
