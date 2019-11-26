@@ -75,7 +75,7 @@ function commandCase() {
 	read -p "$PWD > " inputCom ComArg1 ComArg2
 	case "$inputCom" in
 		"cd")
-    		if [ -d $ComArg1 ] && [ -x $ComArg1 ]; then
+    		if [ -d $ComArg1 ]; then
     			echo "Climbing to $ComArg1..."
 	    		cd $ComArg1
     		else 
@@ -529,13 +529,23 @@ function cat3() {
 			"Question")
 				echo "What do you want to know?"
 				echo "Each cost one bird."
-				select choice in ls cat chmod; do
+				select choice in cd ls cat chmod; do
 					case "$choice" in
+						"cd")
+							if [ "$birdCount" -ge 1 ]; then
+								cat LarkFolder/cd | less
+								echo ""
+								(( birdCount = $birdCount - 1 ))
+							else
+								echo "You do know you need a bird for my flawless advice."
+							fi
+							break 2
+						;;
 						"ls")
 							if [ "$birdCount" -ge 1 ]; then
 								cat LarkFolder/ls | less
 								echo ""
-								(( birdCount = $bircCount - 1 ))
+								(( birdCount = $birdCount - 1 ))
 							else
 								echo "You do know you need a bird for my flawless advice."
 							fi
@@ -545,7 +555,7 @@ function cat3() {
 							if [ "$birdCount" -ge 1 ]; then
 								cat LarkFoldercat | less
 								echo""
-								(( birdCount = $bircCount - 1 ))
+								(( birdCount = $birdCount - 1 ))
 							else
 								echo "You do know you need a bird for my flawless advice."
 							fi
@@ -1152,6 +1162,7 @@ done
 cd $prefix/garden
 
 for ((dayCount ; dayCount < 15 ; dayCount++)); do
+	birdCollected=$(($birdCount - $previousBirdCount))
 	if [ $dayCount == 1 ]; then
 		clear
 		read -p "I see this is your first day, would you like to go through the tutorial? (y/n) " tutorial
