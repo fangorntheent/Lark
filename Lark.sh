@@ -1171,6 +1171,8 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 				clear
 				echo "Every day you can choose a cat to talk to and ask them to ${GREEN}l${NC}i${GREEN}s${NC}t their services."
 				echo "If a ${GREEN}cat${NC} finds a nest, they should pounce by narrating their actions."
+				echo "Try looking around for ${GREEN}nest${NC}s on different ${GREEN}tree${NC}s and ${GREEN}branch${NC}es "
+				echo "by ${GREEN}c${NC}hanging your ${GREEN}d${NC}irectory."
 				echo "If you're having trouble getting onto a certain branch, try ${GREEN}ch${NC}anging the permission ${GREEN}mod${NC}e."
 				echo "You can give yourself ${GREEN}+r${NC}ead, ${GREEN}+w${NC}rite, and e${GREEN}+x${NC}ecute permissions."
 				echo "Make sure you specify what you want permissions for."
