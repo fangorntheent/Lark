@@ -1244,9 +1244,11 @@ done
 
 clear
 if [ "$birdCount" == 0 ]; then
+	cd ~
 	cat LarkFolder/deadcat | less
 	printLose
 else
+	cd ~
 	cat LarkFolder/happycat | less
 	printWin
 fi
