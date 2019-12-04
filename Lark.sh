@@ -1133,6 +1133,7 @@ while [ "$hasFolder" == "false" ]; do
 				hasFolder=true
 				save="$PWD/$folderName/.$folderName.txt"
 				getSave
+				prefix=$PWD/$folderName
 				cont
 			else
 				echo "Uh oh. It looks like that directory doesn't exist yet."
