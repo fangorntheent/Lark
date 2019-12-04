@@ -75,7 +75,7 @@ function commandCase() {
 	read -p "$PWD > " inputCom ComArg1 ComArg2
 	case "$inputCom" in
 		"cd")
-    		if [ -d $ComArg1 ] && [ -x $ComArg1 ]; then
+    		if [ -d $ComArg1 ]; then
     			echo "Climbing to $ComArg1..."
 	    		cd $ComArg1
     		else 
@@ -116,7 +116,6 @@ function commandCase() {
           			echo $ComArg1
           			local catBalls=$( getLoc $ComArg1 )
                 	for ((i = 1 ; i <= $nestCount ; i++)); do
-                		echo "${nestIntArray[$i]}, $i"
                   		if [ "$catLoc" == "${nestIntArray[$i]}" ]; then
                     		nestIntArray[$i]=$(( nestIntArray[$1] - 1 ))
                     		echo "yes"
@@ -479,10 +478,11 @@ function cat2() {
 				echo "I have a mission for you, solider."
 				echo "I need you to gather some of the twigs from the bird nests."
 				randChance=$((1 + RANDOM % 10))
-				missionTask=$((#(Total bird nest count) / randChance))
+				missionTask=$(($nestCount / $randChance))
 				echo "You need to get $missionTask twigs to complete the mission."
 				echo "Good luck solider."
 				task=1
+				break 2
 			;;
 			"Complete")
 				if [ "$task" == 1 ]; then
@@ -933,6 +933,7 @@ function birdbath() {
 						else
 							echo "You knocked over the bird bath and scared away the bird!"
 							echo "The ruckus may have scared some birds from the trees."
+							clear
 							echo -e "${BLINK}waiting...${NORMAL}"
 							sleep 2
 							scareRandom
@@ -945,9 +946,11 @@ function birdbath() {
 					*)
 						echo "You knocked over the bird bath and scared away the bird!"
 						echo "The ruckus may have scared some birds from the trees."
+						clear
 						echo -e "${BLINK}waiting...${NORMAL}"
 						sleep 2
 						scareRandom
+						break 2
 					;;
 				esac
 			;;
@@ -1085,9 +1088,9 @@ function makeGarden() {
 		local TreeIntDef="${i:0:1}"
 		local BrnchAIntDef="${i:1:1}"
 		local BrnchBIntDef="${i:2:1}"
-		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef/branch$BrnchBIntDef
-		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef
-		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef
+		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef/branch$BrnchBIntDef 2>/dev/null 
+		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef 2>/dev/null 
+		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef 2>/dev/null 
 	done
 }
 
@@ -1171,8 +1174,6 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 				clear
 				echo "Every day you can choose a cat to talk to and ask them to ${GREEN}l${NC}i${GREEN}s${NC}t their services."
 				echo "If a ${GREEN}cat${NC} finds a nest, they should pounce by narrating their actions."
-				echo "Try looking around for ${GREEN}nest${NC}s on different ${GREEN}tree${NC}s and ${GREEN}branch${NC}es "
-				echo "by ${GREEN}c${NC}hanging your ${GREEN}d${NC}irectory."
 				echo "If you're having trouble getting onto a certain branch, try ${GREEN}ch${NC}anging the permission ${GREEN}mod${NC}e."
 				echo "You can give yourself ${GREEN}+r${NC}ead, ${GREEN}+w${NC}rite, and e${GREEN}+x${NC}ecute permissions."
 				echo "Make sure you specify what you want permissions for."
@@ -1246,11 +1247,9 @@ done
 
 clear
 if [ "$birdCount" == 0 ]; then
-	cd ~
 	cat LarkFolder/deadcat | less
 	printLose
 else
-	cd ~
 	cat LarkFolder/happycat | less
 	printWin
 fi
