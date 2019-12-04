@@ -46,6 +46,7 @@ function getSave() {
 	nestCount=$( sed -n '1'p $save )
 	birdCount=$( sed -n '2'p $save )
 	dayCount=$( sed -n '3'p $save )
+	(( dayCount = $dayCount + 1 ))
 	chance=$( sed -n '4'p $save )
 	catLoc=$( sed -n '5'p $save )
 	userName=$( sed -n '6'p $save )
