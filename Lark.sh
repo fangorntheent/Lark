@@ -26,37 +26,37 @@ function printLose() {
 clear
 
 function save() {
-	echo "$nestCount" > $save
-	echo "$birdCount" >> $save
-	echo "$dayCount" >> $save
-	echo "$chance" >> $save
-	echo "$catLoc" >> $save
-	echo "$userName" >> $save
-	echo "${nestIntArray[*]}" >> $save
-	echo "${nestArray[*]}" >> $save
-	echo "$eggCount" >> $save
-	echo "$cat9BirdCount" >> $save
-	echo "$hardMode" >> $save
-	echo "$missionTask" >> $save
-	echo "$birdCollected" >> $save
-	echo "$previousBirdCount" >> $save
+	echo "$nestCount" > $saveFile
+	echo "$birdCount" >> $saveFile
+	echo "$dayCount" >> $saveFile
+	echo "$chance" >> $saveFile
+	echo "$catLoc" >> $saveFile
+	echo "$userName" >> $saveFile
+	echo "${nestIntArray[*]}" >> $saveFile
+	echo "${nestArray[*]}" >> $saveFile
+	echo "$eggCount" >> $saveFile
+	echo "$cat9BirdCount" >> $saveFile
+	echo "$hardMode" >> $saveFile
+	echo "$missionTask" >> $saveFile
+	echo "$birdCollected" >> $saveFile
+	echo "$previousBirdCount" >> $saveFile
 }
 
 function getSave() {
-	nestCount=$( sed -n '1'p $save )
-	birdCount=$( sed -n '2'p $save )
-	dayCount=$( sed -n '3'p $save )
-	chance=$( sed -n '4'p $save )
-	catLoc=$( sed -n '5'p $save )
-	userName=$( sed -n '6'p $save )
-	nestIntArray=$( sed -n '7'p $save )
-	nestArray=$( sed -n '8'p $save )
-	eggCount=$( sed -n '9'p $save )
-	cat9BirdCount=$( sed -n '10'p $save )
-	hardMode=$( sed -n '11'p $save )
-	missionTask=$( sed -n '12'p $save )
-	birdCollected=$( sed -n '13'p $save )
-	previousBirdCount=$( sed -n '14'p $save )
+	nestCount=$( sed -n '1'p $saveFile )
+	birdCount=$( sed -n '2'p $saveFile )
+	dayCount=$( sed -n '3'p $saveFile )
+	chance=$( sed -n '4'p $saveFile )
+	catLoc=$( sed -n '5'p $saveFile )
+	userName=$( sed -n '6'p $saveFile )
+	nestIntArray=$( sed -n '7'p $saveFile )
+	nestArray=$( sed -n '8'p $saveFile )
+	eggCount=$( sed -n '9'p $saveFile )
+	cat9BirdCount=$( sed -n '10'p $saveFile )
+	hardMode=$( sed -n '11'p $saveFile )
+	missionTask=$( sed -n '12'p $saveFile )
+	birdCollected=$( sed -n '13'p $saveFile )
+	previousBirdCount=$( sed -n '14'p $saveFile )
 
 	(( dayCount = $dayCount + 1 ))
 }
@@ -976,12 +976,12 @@ function makeGarden() {
 	local nestDifficulty=12
 	local permArray=("" r w x rw rx wr wx xr xw rwx rxw wrx wxr xrw xwr)
 	prefix="$PWD/$1"
-	save="$prefix/.$1.txt"
-	chmod -R 777 $prefix
+	saveFile="$prefix/.$1.txt"
 	if [ -d "$prefix" ]; then
 		read -p "Do you want to overwrite this existing save? (y/n) " overwrite
 		case "$overwrite" in
 			y|Y)
+				chmod -R 777 $prefix
 				rm -r $prefix
 				mkdir $prefix
 				read -p "Would you like to play on hard mode? (y/n) " hardOn
@@ -1010,7 +1010,7 @@ function makeGarden() {
 					break
 				fi
 				mkdir $prefix
-				save="$prefix/.$prefix.txt"
+				saveFile="$prefix/.$prefix.txt"
 
 			;;
 			q|Q)
@@ -1024,8 +1024,8 @@ function makeGarden() {
 		mkdir $prefix
 	fi
 
-	touch $save
-	chmod +w $save
+	touch $saveFile
+	chmod +w $saveFile
 	mkdir $prefix/garden
 
 	if [ "$hardMode" == 1 ]; then
@@ -1081,7 +1081,7 @@ function makeGarden() {
 				(( nestCount = $nestCount + 1 ))
 				nestArray[$nestCount]="$prefix/garden/tree$trees/branch$branch1/branch$branch2/nest"
 				echo "BIRD!" > $prefix/garden/tree$trees/branch$branch1/branch$branch2/nest
-				nestIntArray[$nestCount]=$(( t * 1000 + b1 * 100 + b2 * 10 + 1 ))
+				nestIntArray[$nestCount]=$(( (( t * 1000 )) + (( b1 * 100 )) + (( b2 * 10 )) + 1 ))
 				location=true
 			fi
 		done
@@ -1136,7 +1136,7 @@ while [ "$hasFolder" == "false" ]; do
 			if [ -d  "$PWD/$folderName" ]; then
 				echo "Alright, let's get started."
 				hasFolder=true
-				save="$PWD/$folderName/.$folderName.txt"
+				saveFile="$PWD/$folderName/.$folderName.txt"
 				getSave
 				prefix=$PWD/$folderName
 				goToCatLoc
@@ -1167,7 +1167,9 @@ while [ "$hasFolder" == "false" ]; do
 	esac
 done
 
-cd $prefix/garden
+if [ "$dayCount" == 1]; then
+	cd $prefix/garden
+fi
 
 for ((dayCount ; dayCount < 15 ; dayCount++)); do
 	birdCollected=$(($birdCount - $previousBirdCount))
@@ -1241,6 +1243,7 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 				break
 			;;
 			"Quit")
+				save
 				exit
 			;;
 			*)
