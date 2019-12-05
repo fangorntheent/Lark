@@ -40,6 +40,7 @@ function save() {
 	echo "$missionTask" >> $saveFile
 	echo "$birdCollected" >> $saveFile
 	echo "$previousBirdCount" >> $saveFile
+	echo "$dayComplete" >> $saveFile
 }
 
 function getSave() {
@@ -57,8 +58,11 @@ function getSave() {
 	missionTask=$( sed -n '12'p $saveFile )
 	birdCollected=$( sed -n '13'p $saveFile )
 	previousBirdCount=$( sed -n '14'p $saveFile )
+	dayComplete=$( sed -n '15'p $saveFile )
 
-	(( dayCount = $dayCount + 1 ))
+	if [ "$dayComplete" == 0 ]; then
+		(( dayCount = $dayCount + 1 ))
+	fi
 }
 
 function getLoc() {
@@ -1172,6 +1176,7 @@ if [ "$dayCount" == 1 ]; then
 fi
 
 for ((dayCount ; dayCount < 15 ; dayCount++)); do
+	dayComplete=0
 	birdCollected=$(($birdCount - $previousBirdCount))
 	if [ $dayCount == 1 ]; then
 		clear
@@ -1243,6 +1248,7 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 				break
 			;;
 			"Quit")
+				dayComplete=1
 				save
 				exit
 			;;
@@ -1251,6 +1257,7 @@ for ((dayCount ; dayCount < 15 ; dayCount++)); do
 		esac
 	done
 	commandCase
+	dayComplete=1
 	cont
 	save
 done
