@@ -972,7 +972,7 @@ function makeGarden() {
 	local permArray=("" r w x rw rx wr wx xr xw rwx rxw wrx wxr xrw xwr)
 	prefix="$PWD/$1"
 	save="$prefix/.$1.txt"
-	chmod -R +rwx $prefix
+	chmod -R 755 $prefix
 	if [ -d "$prefix" ]; then
 		read -p "Do you want to overwrite this existing save? (y/n) " overwrite
 		case "$overwrite" in
