@@ -77,6 +77,7 @@ function getLoc() {
 	fi
 	currentDir="${currentDir:$sizeMin:$sizeMax}"
 	currentDir=($(echo $currentDir | tr -d -c 0-9))
+	echo "$currentDir"
 	if [ "${#currentDir}" == 0 ]; then
 		currentDir="0001"
 	elif [ "${#currentDir}" == 1 ]; then
@@ -122,7 +123,6 @@ function scareSpecific() {
 		getLoc $1
 	fi
 	local tempVal=$catLoc
-	echo "This is tempVal: $tempVal"
 	local TreeIntDef="${tempVal:0:1}"
 	local BrnchAIntDef="${tempVal:1:1}"
 	local BrnchBIntDef="${tempVal:2:1}"
@@ -141,22 +141,22 @@ function scareSpecific() {
 	    	if [ "$TreeIntDef" == "$TreeInt" ]; then
     			if [ "$BrnchAIntDef" == "$BrnchAInt" ]; then
     				if [ "$BirdIntDef" != 0 ]; then
-    					(( nestIntArray = ${nestIntArray[$r]} - 1 ))
+    					(( nestIntArray[$r] = ${nestIntArray[$r]} - 1 ))
     		    		flag=1
     		    		echo "It looks like you scared the bird away" > "${nestArray[$r]}"
 	    	    	fi
 		    	elif [ "$BrnchBIntDef" != "$BrnchBInt" ] && [ "$BrnchBIntDef" != 0 ] && [ "$BrnchAIntDef" != 0 ]; then
     				if [ "$BirdIntDef" != 0 ]; then
-    					(( nestIntArray = ${nestIntArray[$r]} - 1 ))
+    					(( nestIntArray[$r] = ${nestIntArray[$r]} - 1 ))
     					flag=1
     					echo "It looks like you scared the bird away" > "${nestArray[$r]}"
 		    		fi
     			elif [ "$BrnchAIntDef" == "$BrnchAInt" ] && [ "$BrnchBIntDef" == 0 ]; then
-    				(( nestIntArray = ${nestIntArray[$r]} - 1 ))
+    				(( nestIntArray[$r] = ${nestIntArray[$r]} - 1 ))
     				flag=1
 	    			echo "It looks like you scared the bird away" > "${nestArray[$r]}"
 	    		elif [ "$BrnchAIntDef" == 0 ]; then
-    				(( nestIntArray = ${nestIntArray[$r]} - 1 ))
+    				(( nestIntArray[$r] = ${nestIntArray[$r]} - 1 ))
     				flag=1
 	    			echo "It looks like you scared the bird away" > "${nestArray[$r]}"
 	    		fi
@@ -1012,7 +1012,7 @@ function makeGarden() {
 				esac
 			;;
 			n|N)
-				read -p "Please enter a new save name: " prefix
+				read -p "Please enter a new save name that does not contain a number: " prefix
 				if [ "$prefix" == "q" ] || [ "$prefix" == "Q" ]; then
 					exit
 				elif [ -d $prefix ]; then
@@ -1141,7 +1141,7 @@ while [ "$hasFolder" == "false" ]; do
 	read -p "Do you have a save folder already? (y/n) " folderName
 	case "$folderName" in
 		y|Y)
-			read -p "What's your save folder called? " folderName
+			read -p "What's your save folder called? (Must not contain a number)" folderName
 			if [ -d  "$PWD/$folderName" ]; then
 				echo "Alright, let's get started."
 				hasFolder=true
@@ -1157,6 +1157,7 @@ while [ "$hasFolder" == "false" ]; do
 		;;
 		n|N)
 			echo -e "Let's fix that. Why don't you ${GREEN}m${NC}a${GREEN}k${NC}e a new ${GREEN}dir${NC}ectory."
+			echo "It must not contain a number."
 			read -p "${GREEN}mkdir${NORMAL} " folderName
 			if [ "$folderName" == "q" ] || [ "$folderName" == "Q" ]; then
 				exit
