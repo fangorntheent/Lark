@@ -1091,9 +1091,9 @@ function makeGarden() {
 		local TreeIntDef="${i:0:1}"
 		local BrnchAIntDef="${i:1:1}"
 		local BrnchBIntDef="${i:2:1}"
-		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef/branch$BrnchBIntDef
-		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef
-		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef
+		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef/branch$BrnchBIntDef 2>/dev/null
+		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef 2>/dev/null
+		chmod "=${permArray[$((1 + RANDOM % 15))]}" $prefix/garden/tree$TreeIntDef 2>/dev/null
 	done
 }
 
