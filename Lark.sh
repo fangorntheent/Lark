@@ -79,7 +79,6 @@ function getLoc() {
 	elif [ "${#currentDir}" == 3 ]; then
 		(( currentDir=$currentDir * 10 + 1 ))
 	fi
-	echo "$currentDir"
 }
 
 function goToCatLoc() {
@@ -108,6 +107,57 @@ function attack() {
 	clear
 }
 
+function scareSpecific() {
+	echo "test"
+	if [ -z "$1" ]; then
+		local tempVal=$( getLoc $PWD )
+	else
+		local tempVal=$( getLoc $1 )
+	fi
+	local TreeIntDef="${tempVal:0:1}"
+	local BrnchAIntDef="${tempVal:1:1}"
+	local BrnchBIntDef="${tempVal:2:1}"
+	local BirdIntDef="${tempVal:3:1}"
+	local flag=0
+
+	for ((i = 1; i < $nestCount; i++)); do
+		tempValDef=${nestIntArray[$i]}
+		TreeInt="${nestIntArray[$i]:0:1}"
+		BrnchAInt="${nestIntArray[$i]:1:1}"
+		BrnchBInt="${nestIntArray[$i]:2:1}"
+		BirdInt="${nestIntArray[$i]:3:1}"
+
+		if [ "$tempVal" -ne $tempValDef ] && [ "$BirdInt" -ne 0 ]; then
+	    	if [ $TreeIntDef -eq $TreeInt ]; then
+    			if [ $BrnchAIntDef -eq $BrnchAInt ]; then
+    				if [ $BirdIntDef -ne 0 ]; then
+	    		    	nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    		    		flag=1
+    		    		echo "It looks like you scared the bird away" > ${nestArray[$i]}
+	    	    	fi
+		    	elif [ $BrnchBIntDef -eq $BrnchBInt -a $BrnchBIntDef -ne 0 -a $BrnchAIntDef -eq 0 ]; then
+    				if [ $BirdIntDef -ne 0 ]; then
+    					nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    					flag=1
+    					echo "It looks like you scared the bird away" > ${nestArray[$i]}
+		    		fi
+    			elif [ $BrnchAIntDef -eq $BrnchAInt -a $BrnchBIntDef -eq 0 ]; then
+    				nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    				flag=1
+	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
+	    		elif [ $BrnchAIntDef -eq 0 ]; then
+    				nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    				flag=1
+	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
+	    		fi
+    		fi
+		fi
+	done
+	if [ $flag -eq 1 ]; then
+ 		echo "Oh no! At least one bird flew away!"
+	fi
+}
+
 function commandCase() {
 	echo
 	echo "Enter a command in the format COMMAND [FLAG] PARAMETER (s to skip):"
@@ -117,6 +167,7 @@ function commandCase() {
     		if [ -d $ComArg1 ] && [ -x $ComArg1 ]; then
     			echo "Climbing to $ComArg1..."
 	    		cd $ComArg1
+	    		getLoc $PWD
     		else 
     			echo "$ComArg1 is not a directory.."
     			echo
@@ -236,57 +287,6 @@ function scareRandom() {
 		nestIntArray[$randnum]=$((nestIntArray[$randnum] - 1))
 	else
 		echo "No birds were scared away!"
-	fi
-}
-
-function scareSpecific() {
-	echo "test"
-	if [ -z "$1" ]; then
-		local tempVal=$( getLoc $PWD )
-	else
-		local tempVal=$( getLoc $1 )
-	fi
-	local TreeIntDef="${tempVal:0:1}"
-	local BrnchAIntDef="${tempVal:1:1}"
-	local BrnchBIntDef="${tempVal:2:1}"
-	local BirdIntDef="${tempVal:3:1}"
-	local flag=0
-
-	for ((i = 1; i < $nestCount; i++)); do
-		tempValDef=${nestIntArray[$i]}
-		TreeInt="${nestIntArray[$i]:0:1}"
-		BrnchAInt="${nestIntArray[$i]:1:1}"
-		BrnchBInt="${nestIntArray[$i]:2:1}"
-		BirdInt="${nestIntArray[$i]:3:1}"
-
-		if [ "$tempVal" -ne $tempValDef ] && [ "$BirdInt" -ne 0 ]; then
-	    	if [ $TreeIntDef -eq $TreeInt ]; then
-    			if [ $BrnchAIntDef -eq $BrnchAInt ]; then
-    				if [ $BirdIntDef -ne 0 ]; then
-	    		    	nestIntArray[$i]=$((nestIntArray[$i] - 1))
-    		    		flag=1
-    		    		echo "It looks like you scared the bird away" > ${nestArray[$i]}
-	    	    	fi
-		    	elif [ $BrnchBIntDef -eq $BrnchBInt -a $BrnchBIntDef -ne 0 -a $BrnchAIntDef -eq 0 ]; then
-    				if [ $BirdIntDef -ne 0 ]; then
-    					nestIntArray[$i]=$((nestIntArray[$i] - 1))
-    					flag=1
-    					echo "It looks like you scared the bird away" > ${nestArray[$i]}
-		    		fi
-    			elif [ $BrnchAIntDef -eq $BrnchAInt -a $BrnchBIntDef -eq 0 ]; then
-    				nestIntArray[$i]=$((nestIntArray[$i] - 1))
-    				flag=1
-	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
-	    		elif [ $BrnchAIntDef -eq 0 ]; then
-    				nestIntArray[$i]=$((nestIntArray[$i] - 1))
-    				flag=1
-	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
-	    		fi
-    		fi
-		fi
-	done
-	if [ $flag -eq 1 ]; then
- 		echo "Oh no! At least one bird flew away!"
 	fi
 }
 
