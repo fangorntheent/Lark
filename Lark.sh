@@ -1167,7 +1167,7 @@ while [ "$hasFolder" == "false" ]; do
 	esac
 done
 
-if [ "$dayCount" == 1]; then
+if [ "$dayCount" == 1 ]; then
 	cd $prefix/garden
 fi
 
