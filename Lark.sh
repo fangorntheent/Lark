@@ -60,6 +60,8 @@ function getSave() {
 	previousBirdCount=$( sed -n '14'p $saveFile )
 	dayComplete=$( sed -n '15'p $saveFile )
 
+	IFS=' ' read -ra nestIntArray <<< "$nestIntArray"
+	IFS=' ' read -ra nestArray <<< "$nestArray"
 	if [ "$dayComplete" == 0 ]; then
 		(( dayCount = $dayCount + 1 ))
 	fi
@@ -115,45 +117,48 @@ function attack() {
 
 function scareSpecific() {
 	if [ -z "$1" ]; then
-		local tempVal=$( getLoc $PWD )
+		getLoc $PWD
 	else
-		local tempVal=$( getLoc $1 )
+		getLoc $1
 	fi
+	local tempVal=$catLoc
+	echo "This is tempVal: $tempVal"
 	local TreeIntDef="${tempVal:0:1}"
 	local BrnchAIntDef="${tempVal:1:1}"
 	local BrnchBIntDef="${tempVal:2:1}"
 	local BirdIntDef="${tempVal:3:1}"
 	local flag=0
+	r=0
 
-	for ((i = 0; i < $nestCount; i++)); do
-		tempValDef=${nestIntArray[$i]}
-		TreeInt="${nestIntArray[$i]:0:1}"
-		BrnchAInt="${nestIntArray[$i]:1:1}"
-		BrnchBInt="${nestIntArray[$i]:2:1}"
-		BirdInt="${nestIntArray[$i]:3:1}"
+	for (( r ; r < $nestCount ; r++ )); do
+		tempValDef="${nestIntArray[$r]}"
+		TreeInt="${nestIntArray[$r]:0:1}"
+		BrnchAInt="${nestIntArray[$r]:1:1}"
+		BrnchBInt="${nestIntArray[$r]:2:1}"
+		BirdInt="${nestIntArray[$r]:3:1}"
 
 		if [ "$tempVal" != "$tempValDef" ] && [ "$BirdInt" != 0 ]; then
 	    	if [ "$TreeIntDef" == "$TreeInt" ]; then
     			if [ "$BrnchAIntDef" == "$BrnchAInt" ]; then
     				if [ "$BirdIntDef" != 0 ]; then
-	    		    	nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    					(( nestIntArray = ${nestIntArray[$r]} - 1 ))
     		    		flag=1
-    		    		echo "It looks like you scared the bird away" > ${nestArray[$i]}
+    		    		echo "It looks like you scared the bird away" > "${nestArray[$r]}"
 	    	    	fi
 		    	elif [ "$BrnchBIntDef" != "$BrnchBInt" ] && [ "$BrnchBIntDef" != 0 ] && [ "$BrnchAIntDef" != 0 ]; then
     				if [ "$BirdIntDef" != 0 ]; then
-    					nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    					(( nestIntArray = ${nestIntArray[$r]} - 1 ))
     					flag=1
-    					echo "It looks like you scared the bird away" > ${nestArray[$i]}
+    					echo "It looks like you scared the bird away" > "${nestArray[$r]}"
 		    		fi
     			elif [ "$BrnchAIntDef" == "$BrnchAInt" ] && [ "$BrnchBIntDef" == 0 ]; then
-    				nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    				(( nestIntArray = ${nestIntArray[$r]} - 1 ))
     				flag=1
-	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
+	    			echo "It looks like you scared the bird away" > "${nestArray[$r]}"
 	    		elif [ "$BrnchAIntDef" == 0 ]; then
-    				nestIntArray[$i]=$((nestIntArray[$i] - 1))
+    				(( nestIntArray = ${nestIntArray[$r]} - 1 ))
     				flag=1
-	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
+	    			echo "It looks like you scared the bird away" > "${nestArray[$r]}"
 	    		fi
     		fi
 		fi
