@@ -46,7 +46,6 @@ function getSave() {
 	nestCount=$( sed -n '1'p $save )
 	birdCount=$( sed -n '2'p $save )
 	dayCount=$( sed -n '3'p $save )
-	(( dayCount = $dayCount + 1 ))
 	chance=$( sed -n '4'p $save )
 	catLoc=$( sed -n '5'p $save )
 	userName=$( sed -n '6'p $save )
@@ -58,6 +57,8 @@ function getSave() {
 	missionTask=$( sed -n '12'p $save )
 	birdCollected=$( sed -n '13'p $save )
 	previousBirdCount=$( sed -n '14'p $save )
+
+	(( dayCount = $dayCount + 1 ))
 }
 
 function getLoc() {
@@ -79,6 +80,7 @@ function getLoc() {
 	elif [ "${#currentDir}" == 3 ]; then
 		(( currentDir=$currentDir * 10 + 1 ))
 	fi
+	catLoc=$currentDir
 }
 
 function goToCatLoc() {
@@ -87,13 +89,13 @@ function goToCatLoc() {
 	BrnchBIntDef="${catLoc:2:1}"
 	BrnchIntBDef="${catLoc:3:1}"
 	if [ "$TreeIntDef" == 0 ]; then
-		cd "$PWD/garden"
-	elif [ "$BrnchAIntDef" ==  0]; then
-		cd "$PWD/garden/tree$TreeIntDef"
+		cd "$prefix/garden"
+	elif [ "$BrnchAIntDef" ==  0 ]; then
+		cd "$prefix/garden/tree$TreeIntDef"
 	elif [ "$BrnchBIntDef" == 0 ]; then
-		cd "$PWD/garden/tree$TreeIntDef/branch$BrnchAIntDef"
+		cd "$prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef"
 	else
-		cd "$PWD/garden/tree$TreeIntDef/branch$BrnchAIntDef/branch$BrnchBIntDef"
+		cd "$prefix/garden/tree$TreeIntDef/branch$BrnchAIntDef/branch$BrnchBIntDef"
 	fi
 }
 
@@ -108,7 +110,6 @@ function attack() {
 }
 
 function scareSpecific() {
-	echo "test"
 	if [ -z "$1" ]; then
 		local tempVal=$( getLoc $PWD )
 	else
@@ -120,22 +121,22 @@ function scareSpecific() {
 	local BirdIntDef="${tempVal:3:1}"
 	local flag=0
 
-	for ((i = 1; i < $nestCount; i++)); do
+	for ((i = 0; i < $nestCount; i++)); do
 		tempValDef=${nestIntArray[$i]}
 		TreeInt="${nestIntArray[$i]:0:1}"
 		BrnchAInt="${nestIntArray[$i]:1:1}"
 		BrnchBInt="${nestIntArray[$i]:2:1}"
 		BirdInt="${nestIntArray[$i]:3:1}"
 
-		if [ "$tempVal" -ne $tempValDef ] && [ "$BirdInt" -ne 0 ]; then
+		if [ "$tempVal" != "$tempValDef" ] && [ "$BirdInt" != 0 ]; then
 	    	if [ $TreeIntDef -eq $TreeInt ]; then
     			if [ $BrnchAIntDef -eq $BrnchAInt ]; then
-    				if [ $BirdIntDef -ne 0 ]; then
+    				if [ "$BirdIntDef" != 0 ]; then
 	    		    	nestIntArray[$i]=$((nestIntArray[$i] - 1))
     		    		flag=1
     		    		echo "It looks like you scared the bird away" > ${nestArray[$i]}
 	    	    	fi
-		    	elif [ $BrnchBIntDef -eq $BrnchBInt -a $BrnchBIntDef -ne 0 -a $BrnchAIntDef -eq 0 ]; then
+		    	elif [ "$BrnchBIntDef" != "$BrnchBInt" ] && [ "$BrnchBIntDef" != 0 ] && [ "$BrnchAIntDef" != 0 ]; then
     				if [ $BirdIntDef -ne 0 ]; then
     					nestIntArray[$i]=$((nestIntArray[$i] - 1))
     					flag=1
@@ -976,7 +977,7 @@ function makeGarden() {
 	local permArray=("" r w x rw rx wr wx xr xw rwx rxw wrx wxr xrw xwr)
 	prefix="$PWD/$1"
 	save="$prefix/.$1.txt"
-	chmod -R 755 $prefix
+	chmod -R 777 $prefix
 	if [ -d "$prefix" ]; then
 		read -p "Do you want to overwrite this existing save? (y/n) " overwrite
 		case "$overwrite" in
@@ -1138,6 +1139,7 @@ while [ "$hasFolder" == "false" ]; do
 				save="$PWD/$folderName/.$folderName.txt"
 				getSave
 				prefix=$PWD/$folderName
+				goToCatLoc
 				cont
 			else
 				echo "Uh oh. It looks like that directory doesn't exist yet."
