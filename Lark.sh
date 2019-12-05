@@ -133,24 +133,24 @@ function scareSpecific() {
 		BirdInt="${nestIntArray[$i]:3:1}"
 
 		if [ "$tempVal" != "$tempValDef" ] && [ "$BirdInt" != 0 ]; then
-	    	if [ $TreeIntDef -eq $TreeInt ]; then
-    			if [ $BrnchAIntDef -eq $BrnchAInt ]; then
+	    	if [ "$TreeIntDef" == "$TreeInt" ]; then
+    			if [ "$BrnchAIntDef" == "$BrnchAInt" ]; then
     				if [ "$BirdIntDef" != 0 ]; then
 	    		    	nestIntArray[$i]=$((nestIntArray[$i] - 1))
     		    		flag=1
     		    		echo "It looks like you scared the bird away" > ${nestArray[$i]}
 	    	    	fi
 		    	elif [ "$BrnchBIntDef" != "$BrnchBInt" ] && [ "$BrnchBIntDef" != 0 ] && [ "$BrnchAIntDef" != 0 ]; then
-    				if [ $BirdIntDef -ne 0 ]; then
+    				if [ "$BirdIntDef" != 0 ]; then
     					nestIntArray[$i]=$((nestIntArray[$i] - 1))
     					flag=1
     					echo "It looks like you scared the bird away" > ${nestArray[$i]}
 		    		fi
-    			elif [ $BrnchAIntDef -eq $BrnchAInt -a $BrnchBIntDef -eq 0 ]; then
+    			elif [ "$BrnchAIntDef" == "$BrnchAInt" ] && [ "$BrnchBIntDef" == 0 ]; then
     				nestIntArray[$i]=$((nestIntArray[$i] - 1))
     				flag=1
 	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
-	    		elif [ $BrnchAIntDef -eq 0 ]; then
+	    		elif [ "$BrnchAIntDef" == 0 ]; then
     				nestIntArray[$i]=$((nestIntArray[$i] - 1))
     				flag=1
 	    			echo "It looks like you scared the bird away" > ${nestArray[$i]}
@@ -158,7 +158,7 @@ function scareSpecific() {
     		fi
 		fi
 	done
-	if [ $flag -eq 1 ]; then
+	if [ "$flag" == 1 ]; then
  		echo "Oh no! At least one bird flew away!"
 	fi
 }
